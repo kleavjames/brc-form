@@ -1,13 +1,23 @@
-import { useCallback } from "react";
+import { FC, useCallback } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ListSubHeader from "@mui/material/ListSubheader";
 import { districts } from "../constants/district";
 import { Districts } from "../types/information";
 
-function DistrictSelect() {
+type Props = {
+  onSelect: (e: SelectChangeEvent<string>) => void;
+  selectedValue: string;
+  disabled?: boolean;
+};
+
+const DistrictSelect: FC<Props> = ({
+  onSelect,
+  selectedValue,
+  disabled = false,
+}) => {
   const renderDistricts = useCallback((district: Districts) => {
     const subdistricts = district.subdistrict.map((sub) => {
       return (
@@ -17,22 +27,31 @@ function DistrictSelect() {
       );
     });
 
-    return [<ListSubHeader color="primary">{district.name}</ListSubHeader>, subdistricts];
+    return [
+      <ListSubHeader color="primary">{district.name}</ListSubHeader>,
+      subdistricts,
+    ];
   }, []);
 
   return (
     <>
       <FormControl fullWidth>
-        <InputLabel sx={{ ml: -2 }} id="district-select-label">
+        <InputLabel
+          disabled={disabled}
+          sx={{ ml: -2 }}
+          id="district-select-label"
+        >
           District
         </InputLabel>
         <Select
           labelId="district-select-label"
           id="district"
           name="district"
+          disabled={disabled}
           label="District"
+          value={selectedValue}
           defaultValue={districts[0].subdistrict[0].key}
-          onChange={() => {}}
+          onChange={onSelect}
           variant="standard"
         >
           {districts.map((dist) => renderDistricts(dist))}
@@ -40,6 +59,6 @@ function DistrictSelect() {
       </FormControl>
     </>
   );
-}
+};
 
 export default DistrictSelect;
