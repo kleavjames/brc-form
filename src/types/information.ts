@@ -23,3 +23,14 @@ export enum District {
   Two = 'd2',
   Three = 'd3'
 }
+
+export enum LeadershipLevel {
+  SeniorPastor = 'seniorpastor',
+  NetworkHead = 'networkhead',
+  TwoEightEight = '288',
+  ThreeFourFiveSix = '3456',
+  TwentyK = '20K',
+  Multitudes = 'multitudes',
+  NetworkChurch = 'networkchurch',
+  Visitors = 'visitors',
+}

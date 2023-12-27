@@ -23,6 +23,7 @@ function BarangaySelect() {
           id="barangay"
           name="barangay"
           label="Barangay"
+          defaultValue={barangays['poblacion'][0].value}
           onChange={() => {}}
           variant="standard"
         >

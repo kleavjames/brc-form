@@ -1,87 +1,108 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Grid from '@mui/material/Grid';
+import * as React from "react";
+import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 
-const products = [
-  {
-    name: 'Product 1',
-    desc: 'A nice thing',
-    price: '$9.99',
-  },
-  {
-    name: 'Product 2',
-    desc: 'Another thing',
-    price: '$3.45',
-  },
-  {
-    name: 'Product 3',
-    desc: 'Something else',
-    price: '$6.51',
-  },
-  {
-    name: 'Product 4',
-    desc: 'Best thing of all',
-    price: '$14.11',
-  },
-  { name: 'Shipping', desc: '', price: 'Free' },
-];
-const addresses = ['1 MUI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
-];
-
-export default function Review() {
+export default function ReviewInformation() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Order summary
+        Information Summary
       </Typography>
-      <List disablePadding>
-        {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
-          </ListItem>
-        ))}
-        <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Total" />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
+      <Typography>Please double check information.</Typography>
+      <Stack spacing={3} sx={{ mt: 5 }}>
+        <Box>
+          <Typography fontWeight="700" gutterBottom>
+            Personal Information
           </Typography>
-        </ListItem>
-      </List>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Shipping
+          <Divider sx={{ my: 2 }} />
+          <List disablePadding>
+            <ListItem>
+              <ListItemText primary="Full Name" />
+              <Typography variant="body2">Kleavant James Olmedo</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Birth Date" />
+              <Typography variant="body2">May 16, 1991</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Gender" />
+              <Typography variant="body2">Male</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Status" />
+              <Typography variant="body2">Married</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Address" />
+              <Typography variant="body2">
+                Block 62 Lot 24 Bloodstone Steet, Deca Homes Esperanza
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Barangay" />
+              <Typography variant="body2">Tigatto</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="District" />
+              <Typography variant="body2">District II - Buhangin</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="City/Region" />
+              <Typography variant="body2">Davao City, Davao Del Sur</Typography>
+            </ListItem>
+          </List>
+        </Box>
+        <Box>
+          <Typography fontWeight="700" gutterBottom>
+            Church Information
           </Typography>
-          <Typography gutterBottom>John Smith</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Payment details
+          <Divider sx={{ my: 2 }} />
+          <List disablePadding>
+            <ListItem>
+              <ListItemText primary="Network Head" />
+              <Typography variant="body2">Pastor Duane Gencianos</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Leadership Level" />
+              <Typography variant="body2">288</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Divine Appointment Date" />
+              <Typography variant="body2">November 2012</Typography>
+            </ListItem>
+          </List>
+        </Box>
+        <Box>
+          <Typography fontWeight="700" gutterBottom>
+            Voters Address
           </Typography>
-          <Grid container>
-            {payments.map((payment) => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
+          <Divider sx={{ my: 2 }} />
+          <List disablePadding>
+            <ListItem>
+              <ListItemText primary="Precint ID" />
+              <Typography variant="body2">1122-B</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Barangay" />
+              <Typography variant="body2">Tigatto</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="District" />
+              <Typography variant="body2">District II - Buhangin</Typography>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="City/Region" />
+              <Typography variant="body2">Davao City, Davao Del Sur</Typography>
+            </ListItem>
+          </List>
+        </Box>
+        <Divider sx={{ my: 2 }} />
+      </Stack>
     </React.Fragment>
   );
 }

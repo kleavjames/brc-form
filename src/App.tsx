@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import PersonalInformation from "./pages/PersonalInformation";
 import ChurchInformation from "./pages/ChurchInformation";
 import VotersInformation from "./pages/VotersInformation";
-import Review from "./pages/ReviewInformation";
+import ReviewInformation from "./pages/ReviewInformation";
 
 function Copyright() {
   return (
@@ -45,7 +45,7 @@ function getStepContent(step: number) {
     case 2:
       return <VotersInformation />;
     case 3:
-      return <Review />;
+      return <ReviewInformation />;
     default:
       throw new Error("Unknown step");
   }

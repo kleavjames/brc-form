@@ -14,7 +14,7 @@ import BarangaySelect from "../components/BarangaySelect";
 export default function PersonalInformation() {
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{mb: 4}}>
         Personal Information
       </Typography>
       <Grid container spacing={3}>
@@ -71,6 +71,7 @@ export default function PersonalInformation() {
               id="gender"
               name="gender"
               label="Gender"
+              defaultValue='M'
               onChange={() => {}}
               variant="standard"
             >
@@ -85,6 +86,7 @@ export default function PersonalInformation() {
             <Select
               labelId="status-select-label"
               id="status"
+              defaultValue={Status.Married}
               name="status"
               label="Status"
               onChange={() => {}}

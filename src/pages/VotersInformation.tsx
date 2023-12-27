@@ -4,6 +4,8 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import BarangaySelect from '../components/BarangaySelect';
+import DistrictSelect from '../components/DistrictSelect';
 
 export default function VotersInformation() {
   return (
@@ -16,41 +18,25 @@ export default function VotersInformation() {
           <FormControlLabel
             sx={{mt: 3}}
             control={<Checkbox color="primary" name="registeredVoter" value="yes" />}
-            label="Registered Voter"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="address"
-            name="address"
-            label="Address"
-            fullWidth
-            autoComplete="personal address"
-            variant="standard"
+            label="Registered voter"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="barangay"
-            name="barangay"
-            label="Barangay"
+            id="precinctId"
+            name="precinctId"
+            label="Precinct ID"
             fullWidth
-            autoComplete="personal barangay"
+            autoComplete="precinct-id"
             variant="standard"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="district"
-            name="district"
-            label="District"
-            fullWidth
-            autoComplete="personal address-district"
-            variant="standard"
-          />
+          <DistrictSelect />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <BarangaySelect />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField

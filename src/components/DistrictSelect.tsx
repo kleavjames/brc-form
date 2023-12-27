@@ -31,6 +31,7 @@ function DistrictSelect() {
           id="district"
           name="district"
           label="District"
+          defaultValue={districts[0].subdistrict[0].key}
           onChange={() => {}}
           variant="standard"
         >
