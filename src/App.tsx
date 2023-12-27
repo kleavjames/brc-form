@@ -30,7 +30,7 @@ function Copyright() {
   );
 }
 
-const steps = ["Personal", "Church", "Voters Address", "Review"];
+const steps = ["Personal", "Church", "Voter's Info", "Review"];
 
 function getStepContent(step: number) {
   switch (step) {
