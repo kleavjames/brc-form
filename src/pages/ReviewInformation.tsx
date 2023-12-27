@@ -60,6 +60,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalInfo.firstName} {personalInfo.middleName} {personalInfo.lastName}
               </Typography>
@@ -69,6 +70,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {format(personalInfo.birthdate!, 'MMMM dd, yyyy')}
               </Typography>
@@ -78,6 +80,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalInfo.gender === Gender.Male ? 'Male' : 'Female'}
               </Typography>
@@ -87,8 +90,9 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
-                {personalInfo.status.toUpperCase()}
+                {personalInfo.status.toLocaleUpperCase()}
               </Typography>
             </ListItem>
             <ListItem>
@@ -96,6 +100,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalInfo.address}
               </Typography>
@@ -105,6 +110,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalInfo.barangay}
               </Typography>
@@ -114,6 +120,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalDistrict}
               </Typography>
@@ -123,6 +130,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {personalInfo.city}, {personalInfo.region}
               </Typography>
@@ -140,6 +148,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {churchInfo.networkHead}
               </Typography>
@@ -149,6 +158,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {churchInfo.leadershipLevel}
               </Typography>
@@ -158,6 +168,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {format(churchInfo.divineAppointmentDate!, 'MMMM, yyyy')}
               </Typography>
@@ -175,6 +186,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {votersInfo.precinctId || ''}
               </Typography>
@@ -184,6 +196,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {votersInfo.barangay}
               </Typography>
@@ -193,6 +206,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {votersDistrict}
               </Typography>
@@ -202,6 +216,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                color='primary'
               >
                 {votersInfo.city}, {votersInfo.region}
               </Typography>
