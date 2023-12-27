@@ -97,6 +97,6 @@ export const networkHeads = [
   },
   {
     id: 24,
-    name: 'Pastor Bebz'
+    name: 'Pastor Pinay'
   },
 ]

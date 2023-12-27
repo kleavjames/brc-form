@@ -17,7 +17,7 @@ function DistrictSelect() {
       );
     });
 
-    return [<ListSubHeader>{district.name}</ListSubHeader>, subdistricts];
+    return [<ListSubHeader color="primary">{district.name}</ListSubHeader>, subdistricts];
   }, []);
 
   return (
