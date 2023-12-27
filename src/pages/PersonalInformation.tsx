@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -10,11 +10,14 @@ import MenuItem from "@mui/material/MenuItem";
 import { Gender, Status } from "../types/information";
 import DistrictSelect from "../components/DistrictSelect";
 import BarangaySelect from "../components/BarangaySelect";
+import { useProfile } from "../hooks/useProfile";
 
 export default function PersonalInformation() {
+  const { personalInfo, setPersonalInfo } = useProfile();
+
   return (
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom sx={{mb: 4}}>
+    <Fragment>
+      <Typography variant="h6" gutterBottom sx={{ mb: 4 }}>
         Personal Information
       </Typography>
       <Grid container spacing={3}>
@@ -25,6 +28,13 @@ export default function PersonalInformation() {
             name="firstName"
             label="First name"
             fullWidth
+            value={personalInfo.firstName}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
             autoComplete="given-name"
             variant="standard"
           />
@@ -38,6 +48,13 @@ export default function PersonalInformation() {
             fullWidth
             autoComplete="family-name"
             variant="standard"
+            value={personalInfo.middleName}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -49,11 +66,26 @@ export default function PersonalInformation() {
             fullWidth
             autoComplete="family-name"
             variant="standard"
+            value={personalInfo.lastName}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <DatePicker
-          label='Birthdate'
+            label="Birthdate"
+            name="birthdate"
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                birthdate: e,
+              }));
+            }}
+            value={personalInfo.birthdate}
             slotProps={{
               textField: {
                 variant: "standard",
@@ -65,14 +97,21 @@ export default function PersonalInformation() {
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
-            <InputLabel sx={{ml: -2}} id="gender-select-label">Gender</InputLabel>
+            <InputLabel sx={{ ml: -2 }} id="gender-select-label">
+              Gender
+            </InputLabel>
             <Select
               labelId="gender-select-label"
               id="gender"
               name="gender"
               label="Gender"
-              defaultValue='M'
-              onChange={() => {}}
+              defaultValue="M"
+              onChange={(e) => {
+                setPersonalInfo((prevProps) => ({
+                  ...prevProps,
+                  [e.target.name]: e.target.value,
+                }));
+              }}
               variant="standard"
             >
               <MenuItem value={Gender.Male}>Male</MenuItem>
@@ -82,14 +121,21 @@ export default function PersonalInformation() {
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
-            <InputLabel sx={{ml: -2}} id="status-select-label">Status</InputLabel>
+            <InputLabel sx={{ ml: -2 }} id="status-select-label">
+              Status
+            </InputLabel>
             <Select
               labelId="status-select-label"
               id="status"
               defaultValue={Status.Married}
               name="status"
               label="Status"
-              onChange={() => {}}
+              onChange={(e) => {
+                setPersonalInfo((prevProps) => ({
+                  ...prevProps,
+                  [e.target.name]: e.target.value,
+                }));
+              }}
               variant="standard"
             >
               <MenuItem value={Status.Married}>Married</MenuItem>
@@ -108,13 +154,37 @@ export default function PersonalInformation() {
             fullWidth
             autoComplete="personal address"
             variant="standard"
+            value={personalInfo.address}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <DistrictSelect />
+          <DistrictSelect
+            onSelect={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
+            selectedValue={personalInfo.district}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <BarangaySelect />
+          <BarangaySelect
+            onSelect={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
+            districtValue={personalInfo.district}
+            selectedValue={personalInfo.barangay}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -125,20 +195,34 @@ export default function PersonalInformation() {
             fullWidth
             autoComplete="personal address-city"
             variant="standard"
+            value={personalInfo.city}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="province"
-            name="province"
+            id="region"
+            name="region"
             label="Province/Region"
             fullWidth
-            autoComplete="personal address-province"
+            autoComplete="personal address-region"
             variant="standard"
+            value={personalInfo.region}
+            onChange={(e) => {
+              setPersonalInfo((prevProps) => ({
+                ...prevProps,
+                [e.target.name]: e.target.value,
+              }));
+            }}
           />
         </Grid>
       </Grid>
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -23,10 +23,11 @@ function NetworkHeadsSelect() {
           id="networkHeads"
           name="networkHeads"
           label="Network Heads"
-          defaultValue={networkHeads[0].name}
+          defaultValue={''}
           onChange={() => {}}
           variant="standard"
         >
+          <MenuItem value=''>-</MenuItem>
           {renderNetworkHeads()}
         </Select>
       </FormControl>

@@ -15,6 +15,7 @@ import PersonalInformation from "./pages/PersonalInformation";
 import ChurchInformation from "./pages/ChurchInformation";
 import VotersInformation from "./pages/VotersInformation";
 import ReviewInformation from "./pages/ReviewInformation";
+import { useProfile } from "./hooks/useProfile";
 
 function Copyright() {
   return (
@@ -29,12 +30,7 @@ function Copyright() {
   );
 }
 
-const steps = [
-  "Personal",
-  "Church",
-  "Voters Address",
-  "Review",
-];
+const steps = ["Personal", "Church", "Voters Address", "Review"];
 
 function getStepContent(step: number) {
   switch (step) {
@@ -52,6 +48,8 @@ function getStepContent(step: number) {
 }
 
 export default function App() {
+  const { handleSubmit, validProfileInfo } = useProfile();
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const resetStep = () => {
@@ -59,10 +57,12 @@ export default function App() {
   };
 
   const handleNext = () => {
+    handleSubmit(); // testing only to show data
     setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
+    handleSubmit(); // testing only to show data
     setActiveStep(activeStep - 1);
   };
 
@@ -92,7 +92,11 @@ export default function App() {
           <Typography component="h1" variant="h4" align="center">
             Registration
           </Typography>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }} alternativeLabel>
+          <Stepper
+            activeStep={activeStep}
+            sx={{ pt: 3, pb: 5 }}
+            alternativeLabel
+          >
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -104,15 +108,12 @@ export default function App() {
               <Typography variant="h5" gutterBottom>
                 Thank you for your cooperation.
               </Typography>
-              <Typography variant="subtitle1" sx={{mt: 2}}>
-                Rest assured your information will not be used outside church netowrk information. This is used for profiling of each
-                individual and for statistics only. 
+              <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                Rest assured your information will not be used outside church
+                netowrk information. This is used for profiling of each
+                individual and for statistics only.
               </Typography>
-              <Button
-                  variant="contained"
-                  onClick={resetStep}
-                  sx={{ mt: 3 }}
-                >
+              <Button variant="contained" onClick={resetStep} sx={{ mt: 3 }}>
                 Register new
               </Button>
             </React.Fragment>
@@ -126,13 +127,25 @@ export default function App() {
                   </Button>
                 )}
                 <Button
+                  disabled={!validProfileInfo}
                   variant="contained"
                   onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
+                  sx={{ mt: 3, ml: 1, px: 5 }}
                 >
                   {activeStep === steps.length - 1 ? "Register" : "Next"}
                 </Button>
               </Box>
+              {!validProfileInfo && (
+                <Typography
+                  textAlign="right"
+                  variant="body2"
+                  fontStyle="italic"
+                  color="grey"
+                  sx={{ mt: 1 }}
+                >
+                  *Complete input fields to proceed next
+                </Typography>
+              )}
             </React.Fragment>
           )}
         </Paper>
