@@ -106,6 +106,7 @@ export default function PersonalInformation() {
               name="gender"
               label="Gender"
               defaultValue="M"
+              value={personalInfo.gender}
               onChange={(e) => {
                 setPersonalInfo((prevProps) => ({
                   ...prevProps,
@@ -130,6 +131,7 @@ export default function PersonalInformation() {
               defaultValue={Status.Married}
               name="status"
               label="Status"
+              value={personalInfo.status}
               onChange={(e) => {
                 setPersonalInfo((prevProps) => ({
                   ...prevProps,

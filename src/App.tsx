@@ -48,7 +48,7 @@ function getStepContent(step: number) {
 }
 
 export default function App() {
-  const { handleSubmit, validProfileInfo } = useProfile();
+  const { handleSubmit, validProfileInfo, validChurchInfo } = useProfile();
 
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -65,6 +65,17 @@ export default function App() {
     handleSubmit(); // testing only to show data
     setActiveStep(activeStep - 1);
   };
+
+  const isValid = () => {
+    switch(activeStep) {
+      case 0:
+        return !validProfileInfo;
+      case 1:
+        return !validChurchInfo;
+      default:
+        return false;
+    }
+  }
 
   return (
     <React.Fragment>
@@ -127,7 +138,7 @@ export default function App() {
                   </Button>
                 )}
                 <Button
-                  disabled={!validProfileInfo}
+                  disabled={isValid()}
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1, px: 5 }}
@@ -135,7 +146,7 @@ export default function App() {
                   {activeStep === steps.length - 1 ? "Register" : "Next"}
                 </Button>
               </Box>
-              {!validProfileInfo && (
+              {isValid() && (
                 <Typography
                   textAlign="right"
                   variant="body2"

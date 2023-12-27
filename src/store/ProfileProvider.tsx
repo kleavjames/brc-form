@@ -17,6 +17,7 @@ type ProfileProps = {
   setVotersInfo: React.Dispatch<React.SetStateAction<VotersInformation>>;
   handleSubmit: () => void;
   validProfileInfo: boolean;
+  validChurchInfo: boolean;
 };
 
 type Props = {
@@ -40,7 +41,7 @@ const initialState = {
   churchInformation: {
     networkHead: "",
     leadershipLevel: LeadershipLevel.TwoEightEight,
-    divineAppointmentDate: "",
+    divineAppointmentDate: null,
   },
   votersInformation: {
     isRegistered: false,
@@ -60,7 +61,8 @@ const ProfileContext = createContext<ProfileProps>({
   setChurchInfo: () => {},
   setVotersInfo: () => {},
   handleSubmit: () => {},
-  validProfileInfo: false
+  validProfileInfo: false,
+  validChurchInfo: false,
 });
 
 const ProfileProvider: FC<Props> = ({ children }) => {
@@ -75,16 +77,45 @@ const ProfileProvider: FC<Props> = ({ children }) => {
   );
 
   const validProfileInfo = useMemo(() => {
-    const {firstName, lastName, middleName, birthdate, address, city, region} = personalInfo;
-    if (!firstName || !lastName || !middleName || !birthdate || !address || !city || !region) return false;
+    const {
+      firstName,
+      lastName,
+      middleName,
+      birthdate,
+      address,
+      city,
+      region,
+    } = personalInfo;
+    if (
+      !firstName ||
+      !lastName ||
+      !middleName ||
+      !birthdate ||
+      !address ||
+      !city ||
+      !region
+    ) {
+      return false;
+    }
     return true;
-  }, [personalInfo])
+  }, [personalInfo]);
+
+  const validChurchInfo = useMemo(() => {
+    const { leadershipLevel, divineAppointmentDate, networkHead } = churchInfo;
+    if (
+      (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
+      !divineAppointmentDate
+    ) {
+      return false;
+    }
+    return true;
+  }, [churchInfo]);
 
   const handleSubmit = () => {
-    console.log('personal', personalInfo);
-    console.log('church', churchInfo);
-    console.log('voters', votersInfo);
-  }
+    console.log("personal", personalInfo);
+    console.log("church", churchInfo);
+    console.log("voters", votersInfo);
+  };
 
   return (
     <ProfileContext.Provider
@@ -97,6 +128,7 @@ const ProfileProvider: FC<Props> = ({ children }) => {
         setVotersInfo,
         handleSubmit,
         validProfileInfo,
+        validChurchInfo,
       }}
     >
       {children}

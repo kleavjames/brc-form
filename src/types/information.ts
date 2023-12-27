@@ -23,7 +23,7 @@ export type PersonalInformation = {
 export type ChurchInformation = {
   networkHead: string;
   leadershipLevel: string;
-  divineAppointmentDate: string;
+  divineAppointmentDate: Date | null | undefined;
 }
 
 export type VotersInformation = {
