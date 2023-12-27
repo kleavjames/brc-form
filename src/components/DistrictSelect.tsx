@@ -10,9 +10,14 @@ import { Districts } from "../types/information";
 type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;
   selectedValue: string;
-}
+  disabled?: boolean;
+};
 
-const DistrictSelect: FC<Props> = ({ onSelect, selectedValue }) => {
+const DistrictSelect: FC<Props> = ({
+  onSelect,
+  selectedValue,
+  disabled = false,
+}) => {
   const renderDistricts = useCallback((district: Districts) => {
     const subdistricts = district.subdistrict.map((sub) => {
       return (
@@ -22,19 +27,27 @@ const DistrictSelect: FC<Props> = ({ onSelect, selectedValue }) => {
       );
     });
 
-    return [<ListSubHeader color="primary">{district.name}</ListSubHeader>, subdistricts];
+    return [
+      <ListSubHeader color="primary">{district.name}</ListSubHeader>,
+      subdistricts,
+    ];
   }, []);
 
   return (
     <>
       <FormControl fullWidth>
-        <InputLabel sx={{ ml: -2 }} id="district-select-label">
+        <InputLabel
+          disabled={disabled}
+          sx={{ ml: -2 }}
+          id="district-select-label"
+        >
           District
         </InputLabel>
         <Select
           labelId="district-select-label"
           id="district"
           name="district"
+          disabled={disabled}
           label="District"
           value={selectedValue}
           defaultValue={districts[0].subdistrict[0].key}
@@ -46,6 +59,6 @@ const DistrictSelect: FC<Props> = ({ onSelect, selectedValue }) => {
       </FormControl>
     </>
   );
-}
+};
 
 export default DistrictSelect;

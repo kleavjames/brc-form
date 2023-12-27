@@ -6,8 +6,42 @@ import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
+import { useProfile } from "../hooks/useProfile";
+import format from 'date-fns/format';
+import { Gender } from "../types/information";
+import { districts } from "../constants/district";
 
 export default function ReviewInformation() {
+  const {personalInfo, churchInfo, votersInfo} = useProfile();
+
+  const votersDistrict = React.useMemo(() => {
+    let districtName = '';
+
+    districts.find(dist => {
+      return dist.subdistrict.find(sub => {
+        if (sub.key === votersInfo.district) {
+          districtName = `${dist.name} - ${sub.value}`
+        }
+      })
+    });
+
+    return districtName;
+  }, [votersInfo.district])
+
+  const personalDistrict = React.useMemo(() => {
+    let districtName = '';
+
+    districts.find(dist => {
+      return dist.subdistrict.find(sub => {
+        if (sub.key === personalInfo.district) {
+          districtName = `${dist.name} - ${sub.value}`
+        }
+      })
+    });
+
+    return districtName;
+  }, [personalInfo.district])
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -27,7 +61,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Kleavant James Olmedo
+                {personalInfo.firstName} {personalInfo.middleName} {personalInfo.lastName}
               </Typography>
             </ListItem>
             <ListItem>
@@ -36,7 +70,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                May 16, 1991
+                {format(personalInfo.birthdate!, 'MMMM dd, yyyy')}
               </Typography>
             </ListItem>
             <ListItem>
@@ -45,7 +79,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Male
+                {personalInfo.gender === Gender.Male ? 'Male' : 'Female'}
               </Typography>
             </ListItem>
             <ListItem>
@@ -54,7 +88,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Married
+                {personalInfo.status.toUpperCase()}
               </Typography>
             </ListItem>
             <ListItem>
@@ -63,7 +97,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Block 62 Lot 24 Bloodstone Steet, Deca Homes Esperanza
+                {personalInfo.address}
               </Typography>
             </ListItem>
             <ListItem>
@@ -72,7 +106,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Tigatto
+                {personalInfo.barangay}
               </Typography>
             </ListItem>
             <ListItem>
@@ -81,7 +115,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                District II - Buhangin
+                {personalDistrict}
               </Typography>
             </ListItem>
             <ListItem>
@@ -90,7 +124,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Davao City, Davao Del Sur
+                {personalInfo.city}, {personalInfo.region}
               </Typography>
             </ListItem>
           </List>
@@ -107,7 +141,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Pastor Duane Gencianos
+                {churchInfo.networkHead}
               </Typography>
             </ListItem>
             <ListItem>
@@ -116,7 +150,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                288
+                {churchInfo.leadershipLevel}
               </Typography>
             </ListItem>
             <ListItem>
@@ -125,12 +159,12 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                November 2012
+                {format(churchInfo.divineAppointmentDate!, 'MMMM, yyyy')}
               </Typography>
             </ListItem>
           </List>
         </Box>
-        <Box>
+        {votersInfo.isRegistered ? (<Box>
           <Typography fontWeight="700" gutterBottom>
             Voters Address
           </Typography>
@@ -142,7 +176,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                1122-B
+                {votersInfo.precinctId || ''}
               </Typography>
             </ListItem>
             <ListItem>
@@ -151,7 +185,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Tigatto
+                {votersInfo.barangay}
               </Typography>
             </ListItem>
             <ListItem>
@@ -160,7 +194,7 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                District II - Buhangin
+                {votersDistrict}
               </Typography>
             </ListItem>
             <ListItem>
@@ -169,11 +203,18 @@ export default function ReviewInformation() {
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
               >
-                Davao City, Davao Del Sur
+                {votersInfo.city}, {votersInfo.region}
               </Typography>
             </ListItem>
           </List>
-        </Box>
+        </Box>) : (
+          <Box sx={{ mb: 2}}>
+            <Divider sx={{ my: 3 }} />
+            <Typography textAlign='center' variant="body1" fontStyle='italic' color='gray'>
+              Currently not registered as a voter
+            </Typography>
+          </Box>
+        )}
         <Divider sx={{ my: 2 }} />
       </Stack>
     </React.Fragment>

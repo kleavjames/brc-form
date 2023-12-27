@@ -11,37 +11,52 @@ type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;
   districtValue: string;
   selectedValue: any;
-}
+  disabled?: boolean;
+};
 
-const BarangaySelect: FC<Props> = ({onSelect, selectedValue, districtValue = 'poblacion'}) => {
+const BarangaySelect: FC<Props> = ({
+  onSelect,
+  selectedValue,
+  districtValue = "poblacion",
+  disabled = false,
+}) => {
   const renderBarangays = useCallback(() => {
-    return (barangays as unknown as Barangays)[districtValue].map((barangay: any) => (
-      <MenuItem key={barangay.key} value={barangay.value}>{barangay.value}</MenuItem>
-    ))
-  }, [districtValue])
+    return (barangays as unknown as Barangays)[districtValue].map(
+      (barangay: any) => (
+        <MenuItem key={barangay.key} value={barangay.value}>
+          {barangay.value}
+        </MenuItem>
+      )
+    );
+  }, [districtValue]);
 
   return (
     <>
       <FormControl fullWidth>
-        <InputLabel sx={{ ml: -2 }} id="barangay-select-label">
+        <InputLabel
+          disabled={disabled}
+          sx={{ ml: -2 }}
+          id="barangay-select-label"
+        >
           Barangay
         </InputLabel>
         <Select
           labelId="barangay-select-label"
           id="barangay"
+          disabled={disabled}
           name="barangay"
           label="Barangay"
           value={selectedValue}
-          defaultValue={''}
+          defaultValue={""}
           onChange={onSelect}
           variant="standard"
         >
-          <MenuItem value=''>-</MenuItem>
+          <MenuItem value="">-</MenuItem>
           {renderBarangays()}
         </Select>
       </FormControl>
     </>
   );
-}
+};
 
 export default BarangaySelect;

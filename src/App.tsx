@@ -48,34 +48,44 @@ function getStepContent(step: number) {
 }
 
 export default function App() {
-  const { handleSubmit, validProfileInfo, validChurchInfo } = useProfile();
+  const {
+    handleSubmit,
+    handleResetInfo,
+    validProfileInfo,
+    validChurchInfo,
+    validVotersInfo,
+  } = useProfile();
 
   const [activeStep, setActiveStep] = React.useState(0);
 
   const resetStep = () => {
+    handleResetInfo();
     setActiveStep(0);
   };
 
   const handleNext = () => {
-    handleSubmit(); // testing only to show data
+    if (activeStep === steps.length - 1) {
+      handleSubmit();
+    }
     setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
-    handleSubmit(); // testing only to show data
     setActiveStep(activeStep - 1);
   };
 
   const isValid = () => {
-    switch(activeStep) {
+    switch (activeStep) {
       case 0:
         return !validProfileInfo;
       case 1:
         return !validChurchInfo;
+      case 2:
+        return !validVotersInfo;
       default:
         return false;
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -101,7 +111,7 @@ export default function App() {
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
-            Registration
+            {activeStep === steps.length ? "Complete!" : "Registration"}
           </Typography>
           <Stepper
             activeStep={activeStep}

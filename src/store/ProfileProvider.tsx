@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, useMemo, useState } from "react";
+import { FC, ReactNode, createContext, useCallback, useMemo, useState } from "react";
 import {
   ChurchInformation,
   Gender,
@@ -16,8 +16,10 @@ type ProfileProps = {
   setChurchInfo: React.Dispatch<React.SetStateAction<ChurchInformation>>;
   setVotersInfo: React.Dispatch<React.SetStateAction<VotersInformation>>;
   handleSubmit: () => void;
+  handleResetInfo: () => void;
   validProfileInfo: boolean;
   validChurchInfo: boolean;
+  validVotersInfo: boolean;
 };
 
 type Props = {
@@ -61,8 +63,10 @@ const ProfileContext = createContext<ProfileProps>({
   setChurchInfo: () => {},
   setVotersInfo: () => {},
   handleSubmit: () => {},
+  handleResetInfo: () => {},
   validProfileInfo: false,
   validChurchInfo: false,
+  validVotersInfo: false,
 });
 
 const ProfileProvider: FC<Props> = ({ children }) => {
@@ -111,11 +115,28 @@ const ProfileProvider: FC<Props> = ({ children }) => {
     return true;
   }, [churchInfo]);
 
-  const handleSubmit = () => {
+  const validVotersInfo = useMemo(() => {
+    const { isRegistered, district, barangay, city, region } = votersInfo;
+    if (!isRegistered) {
+      return true;
+    }
+    if (!district || !barangay || !city || !region) {
+      return false;
+    }
+    return true;
+  }, [votersInfo]);
+
+  const handleSubmit = useCallback(() => {
     console.log("personal", personalInfo);
     console.log("church", churchInfo);
     console.log("voters", votersInfo);
-  };
+  }, [churchInfo, personalInfo, votersInfo]);
+
+  const handleResetInfo = useCallback(() => {
+    setPersonalInfo(initialState.personalInformation);
+    setChurchInfo(initialState.churchInformation);
+    setVotersInfo(initialState.votersInformation);
+  }, [])
 
   return (
     <ProfileContext.Provider
@@ -129,6 +150,8 @@ const ProfileProvider: FC<Props> = ({ children }) => {
         handleSubmit,
         validProfileInfo,
         validChurchInfo,
+        validVotersInfo,
+        handleResetInfo,
       }}
     >
       {children}
