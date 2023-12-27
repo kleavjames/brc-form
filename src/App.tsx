@@ -11,10 +11,10 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import PersonalInformation from "./components/PersonalInformation";
-import ChurchInformation from "./components/ChurchInformation";
-import VotersInformation from "./components/VotersInformation";
-import Review from "./components/ReviewInformation";
+import PersonalInformation from "./pages/PersonalInformation";
+import ChurchInformation from "./pages/ChurchInformation";
+import VotersInformation from "./pages/VotersInformation";
+import Review from "./pages/ReviewInformation";
 
 function Copyright() {
   return (
