@@ -39,8 +39,9 @@ export default function ReviewInformation() {
             </ListItem>
             <ListItem>
               <ListItemText primary="Address" />
-              <Typography variant="body2">
-                Block 62 Lot 24 Bloodstone Steet, Deca Homes Esperanza
+              <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', textAlign:'right'}}>
+                Block 62 Lot 24 Bloodstone Steet,{"\n"}
+                Deca Homes Esperanza
               </Typography>
             </ListItem>
             <ListItem>
