@@ -11,6 +11,7 @@ import ChurchInformation from "./ChurchInformation";
 import VotersInformation from "./VotersInformation";
 import ReviewInformation from "./ReviewInformation";
 import { useProfile } from "../hooks/useProfile";
+import Grid from "@mui/material/Grid";
 
 const steps = ["Personal", "Church", "Voter's Info", "Review"];
 
@@ -71,7 +72,9 @@ export default function Registration() {
 
   return (
     <React.Fragment>
-      <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
+      <Grid container>
+        <Grid item xs={12} md={8} sx={{ m: 3}}>
+        <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
         <Typography component="h1" variant="h4" align="center">
           {activeStep === steps.length ? "Complete!" : "Registration"}
         </Typography>
@@ -128,6 +131,8 @@ export default function Registration() {
           </React.Fragment>
         )}
       </Paper>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 }

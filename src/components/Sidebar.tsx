@@ -13,6 +13,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -50,6 +51,8 @@ type SidebarProps = {
 const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (matches) {
     return (
@@ -74,13 +77,19 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => navigate("/")}
+            selected={location.pathname === "/"}
+          >
             <ListItemIcon>
               <ContactPageIcon />
             </ListItemIcon>
             <ListItemText primary="Profiles" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => navigate("/register")}
+            selected={location.pathname === "/register"}
+          >
             <ListItemIcon>
               <PersonAddAlt1Icon />
             </ListItemIcon>
@@ -122,13 +131,19 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+          onClick={() => navigate("/")}
+          selected={location.pathname === "/"}
+        >
           <ListItemIcon>
             <ContactPageIcon />
           </ListItemIcon>
           <ListItemText primary="Profiles" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+          onClick={() => navigate("/register")}
+          selected={location.pathname === "/register"}
+        >
           <ListItemIcon>
             <PersonAddAlt1Icon />
           </ListItemIcon>

@@ -5,7 +5,8 @@ import { useState } from "react";
 import HeaderBar from "./components/HeaderBar";
 import Sidebar from "./components/Sidebar";
 import Toolbar from "@mui/material/Toolbar";
-import Grid from "@mui/material/Grid";
+import { Route, Routes } from "react-router-dom";
+import Profiles from "./pages/Profiles";
 
 const App = () => {
   const [open, setOpen] = useState(true);
@@ -31,11 +32,15 @@ const App = () => {
         }}
       >
         <Toolbar />
-        <Grid container>
+        {/* <Grid container>
           <Grid item xs={12} md={8} sx={{ m: 3 }}>
             <Registration />
           </Grid>
-        </Grid>
+        </Grid> */}
+        <Routes>
+          <Route path="/" element={<Profiles />} />
+          <Route path="/register" element={<Registration />} />
+        </Routes>
       </Box>
     </Box>
   );
