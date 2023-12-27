@@ -23,38 +23,75 @@ export default function ReviewInformation() {
           <List disablePadding>
             <ListItem>
               <ListItemText primary="Full Name" />
-              <Typography variant="body2">Kleavant James Olmedo</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Kleavant James Olmedo
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Birth Date" />
-              <Typography variant="body2">May 16, 1991</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                May 16, 1991
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Gender" />
-              <Typography variant="body2">Male</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Male
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Status" />
-              <Typography variant="body2">Married</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Married
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Address" />
-              <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', textAlign:'right'}}>
-                Block 62 Lot 24 Bloodstone Steet,{"\n"}
-                Deca Homes Esperanza
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Block 62 Lot 24 Bloodstone Steet, Deca Homes Esperanza
               </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Barangay" />
-              <Typography variant="body2">Tigatto</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Tigatto
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="District" />
-              <Typography variant="body2">District II - Buhangin</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                District II - Buhangin
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="City/Region" />
-              <Typography variant="body2">Davao City, Davao Del Sur</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Davao City, Davao Del Sur
+              </Typography>
             </ListItem>
           </List>
         </Box>
@@ -66,15 +103,30 @@ export default function ReviewInformation() {
           <List disablePadding>
             <ListItem>
               <ListItemText primary="Network Head" />
-              <Typography variant="body2">Pastor Duane Gencianos</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Pastor Duane Gencianos
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Leadership Level" />
-              <Typography variant="body2">288</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                288
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Divine Appointment Date" />
-              <Typography variant="body2">November 2012</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                November 2012
+              </Typography>
             </ListItem>
           </List>
         </Box>
@@ -86,19 +138,39 @@ export default function ReviewInformation() {
           <List disablePadding>
             <ListItem>
               <ListItemText primary="Precint ID" />
-              <Typography variant="body2">1122-B</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                1122-B
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="Barangay" />
-              <Typography variant="body2">Tigatto</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Tigatto
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="District" />
-              <Typography variant="body2">District II - Buhangin</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                District II - Buhangin
+              </Typography>
             </ListItem>
             <ListItem>
               <ListItemText primary="City/Region" />
-              <Typography variant="body2">Davao City, Davao Del Sur</Typography>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+              >
+                Davao City, Davao Del Sur
+              </Typography>
             </ListItem>
           </List>
         </Box>
