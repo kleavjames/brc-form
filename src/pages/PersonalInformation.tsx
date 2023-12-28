@@ -1,19 +1,44 @@
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Gender, Status } from "../types/information";
+import { Barangays, Gender, Status } from "../types/information";
 import DistrictSelect from "../components/DistrictSelect";
 import BarangaySelect from "../components/BarangaySelect";
 import { useProfile } from "../hooks/useProfile";
+import { barangays } from "../constants/barangay";
 
 export default function PersonalInformation() {
   const { personalInfo, setPersonalInfo } = useProfile();
+
+  const onSelectDistrict = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setPersonalInfo((prevProps) => ({
+        ...prevProps,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [setPersonalInfo]
+  );
+
+  const onSelectBarangay = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      const districtNum = (barangays as unknown as Barangays)[
+        personalInfo.district
+      ][0].district;
+      setPersonalInfo((prevProps) => ({
+        ...prevProps,
+        districtNumber: districtNum,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [personalInfo.district, setPersonalInfo]
+  );
 
   return (
     <Fragment>
@@ -167,23 +192,13 @@ export default function PersonalInformation() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <DistrictSelect
-            onSelect={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onSelect={onSelectDistrict}
             selectedValue={personalInfo.district}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <BarangaySelect
-            onSelect={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onSelect={onSelectBarangay}
             districtValue={personalInfo.district}
             selectedValue={personalInfo.barangay}
           />

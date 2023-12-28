@@ -1,4 +1,11 @@
-import { FC, ReactNode, createContext, useCallback, useMemo, useState } from "react";
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   ChurchInformation,
   Gender,
@@ -7,6 +14,9 @@ import {
   Status,
   VotersInformation,
 } from "../types/information";
+import { addProfile } from "../api/profiles";
+import { toast } from "react-toastify";
+import { errorToast, successToast } from "../config/toastConfig";
 
 type ProfileProps = {
   personalInfo: PersonalInformation;
@@ -15,7 +25,7 @@ type ProfileProps = {
   setPersonalInfo: React.Dispatch<React.SetStateAction<PersonalInformation>>;
   setChurchInfo: React.Dispatch<React.SetStateAction<ChurchInformation>>;
   setVotersInfo: React.Dispatch<React.SetStateAction<VotersInformation>>;
-  handleSubmit: () => void;
+  handleSubmit: () => Promise<void>;
   handleResetInfo: () => void;
   validProfileInfo: boolean;
   validChurchInfo: boolean;
@@ -36,6 +46,7 @@ const initialState = {
     status: Status.Married,
     address: "",
     district: "poblacion",
+    districtNumber: 0,
     barangay: "1-A",
     city: "",
     region: "",
@@ -47,11 +58,12 @@ const initialState = {
   },
   votersInformation: {
     isRegistered: false,
-    precinctId: null,
-    barangay: null,
-    city: null,
-    district: null,
-    region: null,
+    votingPrecinctId: null,
+    votingBarangay: null,
+    votingCity: null,
+    votingDistrict: null,
+    votingDistrictNumber: null,
+    votingRegion: null,
   },
 };
 
@@ -62,7 +74,7 @@ const ProfileContext = createContext<ProfileProps>({
   setPersonalInfo: () => {},
   setChurchInfo: () => {},
   setVotersInfo: () => {},
-  handleSubmit: () => {},
+  handleSubmit: async () => {},
   handleResetInfo: () => {},
   validProfileInfo: false,
   validChurchInfo: false,
@@ -116,27 +128,41 @@ const ProfileProvider: FC<Props> = ({ children }) => {
   }, [churchInfo]);
 
   const validVotersInfo = useMemo(() => {
-    const { isRegistered, district, barangay, city, region } = votersInfo;
+    const {
+      isRegistered,
+      votingBarangay,
+      votingCity,
+      votingDistrict,
+      votingRegion,
+    } = votersInfo;
     if (!isRegistered) {
       return true;
     }
-    if (!district || !barangay || !city || !region) {
+    if (!votingDistrict || !votingBarangay || !votingCity || !votingRegion) {
       return false;
     }
     return true;
   }, [votersInfo]);
 
-  const handleSubmit = useCallback(() => {
-    console.log("personal", personalInfo);
-    console.log("church", churchInfo);
-    console.log("voters", votersInfo);
+  const handleSubmit = useCallback(async () => {
+    try {
+      await addProfile({
+        ...personalInfo,
+        ...churchInfo,
+        ...votersInfo,
+      });
+
+      toast.success("Successfully created the profile", successToast);
+    } catch (error) {
+      toast.error("Failed to create profile", errorToast);
+    }
   }, [churchInfo, personalInfo, votersInfo]);
 
   const handleResetInfo = useCallback(() => {
     setPersonalInfo(initialState.personalInformation);
     setChurchInfo(initialState.churchInformation);
     setVotersInfo(initialState.votersInformation);
-  }, [])
+  }, []);
 
   return (
     <ProfileContext.Provider

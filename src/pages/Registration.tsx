@@ -46,9 +46,9 @@ export default function Registration() {
     setActiveStep(0);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (activeStep === steps.length - 1) {
-      handleSubmit();
+      await handleSubmit();
     }
     setActiveStep(activeStep + 1);
   };
@@ -73,64 +73,68 @@ export default function Registration() {
   return (
     <React.Fragment>
       <Grid container>
-        <Grid item xs={12} md={8} sx={{ m: 3}}>
-        <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
-        <Typography component="h1" variant="h4" align="center">
-          {activeStep === steps.length ? "Complete!" : "Registration"}
-        </Typography>
-        <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        {activeStep === steps.length ? (
-          <React.Fragment>
-            <Typography variant="h5" gutterBottom>
-              Thank you for your cooperation.
+        <Grid item xs={12} md={8} sx={{ m: 3 }}>
+          <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
+            <Typography component="h1" variant="h4" align="center">
+              {activeStep === steps.length ? "Complete!" : "Registration"}
             </Typography>
-            <Typography variant="subtitle1" sx={{ mt: 2 }}>
-              Rest assured your information will not be used outside church
-              netowrk information. This is used for profiling of each individual
-              and for statistics only.
-            </Typography>
-            <Button variant="contained" onClick={resetStep} sx={{ mt: 3 }}>
-              Register new
-            </Button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {getStepContent(activeStep)}
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              {activeStep !== 0 && (
-                <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                  Back
+            <Stepper
+              activeStep={activeStep}
+              sx={{ pt: 3, pb: 5 }}
+              alternativeLabel
+            >
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography variant="h5" gutterBottom>
+                  Thank you for your cooperation.
+                </Typography>
+                <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                  Rest assured your information will not be used outside church
+                  netowrk information. This is used for profiling of each
+                  individual and for statistics only.
+                </Typography>
+                <Button variant="contained" onClick={resetStep} sx={{ mt: 3 }}>
+                  Register new
                 </Button>
-              )}
-              <Button
-                disabled={isValid()}
-                variant="contained"
-                onClick={handleNext}
-                sx={{ mt: 3, ml: 1, px: 5 }}
-              >
-                {activeStep === steps.length - 1 ? "Register" : "Next"}
-              </Button>
-            </Box>
-            {isValid() && (
-              <Typography
-                textAlign="right"
-                variant="body2"
-                fontStyle="italic"
-                color="grey"
-                sx={{ mt: 1 }}
-              >
-                *Complete input fields to proceed next
-              </Typography>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                      Back
+                    </Button>
+                  )}
+                  <Button
+                    disabled={isValid()}
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 3, ml: 1, px: 5 }}
+                  >
+                    {activeStep === steps.length - 1 ? "Register" : "Next"}
+                  </Button>
+                </Box>
+                {isValid() && (
+                  <Typography
+                    textAlign="right"
+                    variant="body2"
+                    fontStyle="italic"
+                    color="grey"
+                    sx={{ mt: 1 }}
+                  >
+                    *Complete input fields to proceed next
+                  </Typography>
+                )}
+              </React.Fragment>
             )}
-          </React.Fragment>
-        )}
-      </Paper>
+          </Paper>
         </Grid>
       </Grid>
     </React.Fragment>

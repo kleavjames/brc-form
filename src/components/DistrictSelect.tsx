@@ -11,12 +11,14 @@ type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;
   selectedValue: string;
   disabled?: boolean;
+  forVoter?: boolean;
 };
 
 const DistrictSelect: FC<Props> = ({
   onSelect,
   selectedValue,
   disabled = false,
+  forVoter = false,
 }) => {
   const renderDistricts = useCallback((district: Districts) => {
     const subdistricts = district.subdistrict.map((sub) => {
@@ -45,8 +47,8 @@ const DistrictSelect: FC<Props> = ({
         </InputLabel>
         <Select
           labelId="district-select-label"
-          id="district"
-          name="district"
+          id={forVoter ? "votingDistrict" : "district"}
+          name={forVoter ? "votingDistrict" : "district"}
           disabled={disabled}
           label="District"
           value={selectedValue}

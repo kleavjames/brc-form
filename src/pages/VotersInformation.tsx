@@ -7,6 +7,10 @@ import Checkbox from "@mui/material/Checkbox";
 import BarangaySelect from "../components/BarangaySelect";
 import DistrictSelect from "../components/DistrictSelect";
 import { useProfile } from "../hooks/useProfile";
+import { useCallback } from "react";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { barangays } from "../constants/barangay";
+import { Barangays } from "../types/information";
 
 export default function VotersInformation() {
   const { votersInfo, setVotersInfo } = useProfile();
@@ -14,21 +18,46 @@ export default function VotersInformation() {
   const handleVoteChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
       setVotersInfo({
-        precinctId: null,
-        barangay: null,
-        district: null,
-        city: null,
-        region: null,
+        votingPrecinctId: null,
+        votingBarangay: null,
+        votingDistrict: null,
+        votingDistrictNumber: null,
+        votingCity: null,
+        votingRegion: null,
         isRegistered: e.target.checked,
       });
       return;
     }
-  
+
     setVotersInfo((prevProps) => ({
       ...prevProps,
       [e.target.name]: e.target.checked,
     }));
-  }
+  };
+
+  const onSelectDistrict = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setVotersInfo((prevProps) => ({
+        ...prevProps,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [setVotersInfo]
+  );
+
+  const onSelectBarangay = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      const districtNum = (barangays as unknown as Barangays)[
+        votersInfo.votingDistrict!
+      ][0].district;
+      setVotersInfo((prevProps) => ({
+        ...prevProps,
+        votingDistrictNumber: districtNum,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [votersInfo.votingDistrict, setVotersInfo]
+  );
 
   return (
     <React.Fragment>
@@ -57,10 +86,10 @@ export default function VotersInformation() {
         <Grid item xs={12} sm={6}>
           <TextField
             disabled={!votersInfo.isRegistered}
-            id="precinctId"
-            name="precinctId"
+            id="votingPrecinctId"
+            name="votingPrecinctId"
             label="Precinct ID"
-            value={votersInfo.precinctId || ""}
+            value={votersInfo.votingPrecinctId || ""}
             fullWidth
             autoComplete="precinct-id"
             variant="standard"
@@ -74,38 +103,34 @@ export default function VotersInformation() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <DistrictSelect
-            onSelect={(e) => {
-              setVotersInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            forVoter
+            onSelect={onSelectDistrict}
             disabled={!votersInfo.isRegistered}
-            selectedValue={votersInfo.district ? votersInfo.district : ""}
+            selectedValue={
+              votersInfo.votingDistrict ? votersInfo.votingDistrict : ""
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <BarangaySelect
-            onSelect={(e) => {
-              setVotersInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            forVoter
+            onSelect={onSelectBarangay}
             disabled={!votersInfo.isRegistered}
-            districtValue={votersInfo.district || "poblacion"}
-            selectedValue={votersInfo.barangay ? votersInfo.barangay : ""}
+            districtValue={votersInfo.votingDistrict || "poblacion"}
+            selectedValue={
+              votersInfo.votingBarangay ? votersInfo.votingBarangay : ""
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
             disabled={!votersInfo.isRegistered}
-            id="city"
-            name="city"
+            id="votingCity"
+            name="votingCity"
             label="City/Municipality"
             fullWidth
-            value={votersInfo.city || ""}
+            value={votersInfo.votingCity || ""}
             autoComplete="personal address-city"
             variant="standard"
             onChange={(e) => {
@@ -118,12 +143,12 @@ export default function VotersInformation() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            id="region"
+            id="votingRegion"
             disabled={!votersInfo.isRegistered}
-            name="region"
+            name="votingRegion"
             label="Province/Region"
             fullWidth
-            value={votersInfo.region || ""}
+            value={votersInfo.votingRegion || ""}
             autoComplete="personal address-region"
             variant="standard"
             onChange={(e) => {

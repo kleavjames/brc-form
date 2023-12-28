@@ -8,11 +8,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { HashRouter } from "react-router-dom";
 import ProfileProvider from "./store/ProfileProvider.tsx";
+import { ToastContainer } from "react-toastify";
 
 import "@fontsource/ibm-plex-sans/300.css";
 import "@fontsource/ibm-plex-sans/400.css";
 import "@fontsource/ibm-plex-sans/500.css";
 import "@fontsource/ibm-plex-sans/700.css";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -22,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <ProfileProvider>
             <CssBaseline />
             <App />
+            <ToastContainer />
           </ProfileProvider>
         </LocalizationProvider>
       </HashRouter>
