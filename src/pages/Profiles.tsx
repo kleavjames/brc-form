@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback, useState } from "react";
 import {
   DataGrid,
   GridColDef,
@@ -11,12 +11,18 @@ import {
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { useProfile } from "../hooks/useProfile";
-import { Gender, Status } from "../types/information";
+import { Gender, LeadershipLevel, Status } from "../types/information";
 import format from "date-fns/format";
 import { Typography } from "@mui/material";
+import EditProfileModal from "../components/modals/EditProfileModal";
+import { Profile } from "../types/profile";
 
 const Profiles = () => {
-  const { profile } = useProfile();
+  const { profile, initialProfile, onHandleUpdate, onHandleDelete } =
+    useProfile();
+
+  const [openEdit, setOpenEdit] = useState(false);
+  const [updateProfile, setUpdateProfile] = useState<Profile>(initialProfile);
 
   const columns: GridColDef[] = [
     {
@@ -103,6 +109,22 @@ const Profiles = () => {
       headerName: "Level",
       filterable: true,
       sortable: false,
+      valueFormatter: (params: GridValueFormatterParams<string>) => {
+        switch (params.value) {
+          case LeadershipLevel.SeniorPastor:
+            return "Senior Pastor";
+          case LeadershipLevel.NetworkHead:
+            return "Network Head";
+          case LeadershipLevel.Multitudes:
+            return "Multitudes";
+          case LeadershipLevel.NetworkChurch:
+            return "Network Church";
+          case LeadershipLevel.Visitors:
+            return "Visitors";
+          default:
+            return params.value;
+        }
+      },
     },
     {
       field: "divineAppointmentDate",
@@ -193,18 +215,24 @@ const Profiles = () => {
     },
   ];
 
-  const handleRowClick: GridEventListener<"rowDoubleClick"> = (
-    params,
-    event
-  ) => {
-    console.log(params, event);
-    // if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-    //   event.defaultMuiPrevented = true;
-    // }
+  const handleRowClick: GridEventListener<"rowDoubleClick"> = (params) => {
+    setUpdateProfile(params.row);
+    setOpenEdit(true);
   };
+
+  const onCloseModal = useCallback(() => {
+    setOpenEdit(false);
+  }, []);
 
   return (
     <Fragment>
+      <EditProfileModal
+        profile={updateProfile}
+        open={openEdit}
+        onClose={onCloseModal}
+        onHandleUpdate={onHandleUpdate}
+        onHandleDelete={onHandleDelete}
+      />
       <Grid>
         <Grid item xs={12} sx={{ m: 3 }}>
           <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>

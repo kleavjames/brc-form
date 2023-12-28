@@ -4,6 +4,9 @@ import {
   VotersInformation,
 } from "./information";
 
-export type Profile = PersonalInformation &
-  ChurchInformation &
-  VotersInformation;
+export interface Profile
+  extends PersonalInformation,
+    ChurchInformation,
+    VotersInformation {
+  _id?: string;
+}

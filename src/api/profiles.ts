@@ -20,3 +20,21 @@ export const addProfile = async (profile: Profile) => {
     return errorHandler(error);
   }
 };
+
+export const updateProfile = async (profile: Profile, id: string) => {
+  try {
+    await instance.patch(`/profiles/${id}`, {
+      ...profile,
+    });
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
+
+export const deleteProfile = async (id: string) => {
+  try {
+    await instance.delete(`/profiles/${id}`);
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
