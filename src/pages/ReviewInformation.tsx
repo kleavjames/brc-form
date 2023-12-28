@@ -6,13 +6,13 @@ import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { useProfile } from "../hooks/useProfile";
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import format from "date-fns/format";
 import { Gender } from "../types/information";
 import { districts } from "../constants/district";
 
 export default function ReviewInformation() {
-  const { personalInfo, churchInfo, votersInfo } = useProfile();
+  const { personalInfo, churchInfo, votersInfo } = useRegisterProfile();
 
   const votersDistrict = React.useMemo(() => {
     let districtName = "";

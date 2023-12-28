@@ -6,14 +6,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import BarangaySelect from "../components/BarangaySelect";
 import DistrictSelect from "../components/DistrictSelect";
-import { useProfile } from "../hooks/useProfile";
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import { useCallback } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { barangays } from "../constants/barangay";
 import { Barangays } from "../types/information";
 
 export default function VotersInformation() {
-  const { votersInfo, setVotersInfo } = useProfile();
+  const { votersInfo, setVotersInfo } = useRegisterProfile();
 
   const handleVoteChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {

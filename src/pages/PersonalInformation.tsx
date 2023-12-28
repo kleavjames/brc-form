@@ -10,11 +10,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { Barangays, Gender, Status } from "../types/information";
 import DistrictSelect from "../components/DistrictSelect";
 import BarangaySelect from "../components/BarangaySelect";
-import { useProfile } from "../hooks/useProfile";
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import { barangays } from "../constants/barangay";
 
 export default function PersonalInformation() {
-  const { personalInfo, setPersonalInfo } = useProfile();
+  const { personalInfo, setPersonalInfo } = useRegisterProfile();
 
   const onSelectDistrict = useCallback(
     (e: SelectChangeEvent<string>) => {

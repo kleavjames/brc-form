@@ -10,7 +10,7 @@ import PersonalInformation from "./PersonalInformation";
 import ChurchInformation from "./ChurchInformation";
 import VotersInformation from "./VotersInformation";
 import ReviewInformation from "./ReviewInformation";
-import { useProfile } from "../hooks/useProfile";
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import Grid from "@mui/material/Grid";
 
 const steps = ["Personal", "Church", "Voter's Info", "Review"];
@@ -37,7 +37,7 @@ export default function Registration() {
     validProfileInfo,
     validChurchInfo,
     validVotersInfo,
-  } = useProfile();
+  } = useRegisterProfile();
 
   const [activeStep, setActiveStep] = React.useState(0);
 

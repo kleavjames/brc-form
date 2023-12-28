@@ -7,8 +7,9 @@ import theme from "./theme.ts";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { HashRouter } from "react-router-dom";
-import ProfileProvider from "./store/ProfileProvider.tsx";
+import RegisterProfileProvider from "./store/RegisterProfileProvider.tsx";
 import { ToastContainer } from "react-toastify";
+import ProfileProvider from "./store/ProfileProvider.tsx";
 
 import "@fontsource/ibm-plex-sans/300.css";
 import "@fontsource/ibm-plex-sans/400.css";
@@ -22,9 +23,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <HashRouter basename="/">
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ProfileProvider>
-            <CssBaseline />
-            <App />
-            <ToastContainer />
+            <RegisterProfileProvider>
+              <CssBaseline />
+              <App />
+              <ToastContainer />
+            </RegisterProfileProvider>
           </ProfileProvider>
         </LocalizationProvider>
       </HashRouter>
