@@ -6,41 +6,41 @@ import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { useProfile } from "../hooks/useProfile";
-import format from 'date-fns/format';
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
+import format from "date-fns/format";
 import { Gender } from "../types/information";
 import { districts } from "../constants/district";
 
 export default function ReviewInformation() {
-  const {personalInfo, churchInfo, votersInfo} = useProfile();
+  const { personalInfo, churchInfo, votersInfo } = useRegisterProfile();
 
   const votersDistrict = React.useMemo(() => {
-    let districtName = '';
+    let districtName = "";
 
-    districts.find(dist => {
-      return dist.subdistrict.find(sub => {
-        if (sub.key === votersInfo.district) {
-          districtName = `${dist.name} - ${sub.value}`
+    districts.find((dist) => {
+      return dist.subdistrict.find((sub) => {
+        if (sub.key === votersInfo.votingDistrict) {
+          districtName = `${dist.name} - ${sub.value}`;
         }
-      })
+      });
     });
 
     return districtName;
-  }, [votersInfo.district])
+  }, [votersInfo.votingDistrict]);
 
   const personalDistrict = React.useMemo(() => {
-    let districtName = '';
+    let districtName = "";
 
-    districts.find(dist => {
-      return dist.subdistrict.find(sub => {
+    districts.find((dist) => {
+      return dist.subdistrict.find((sub) => {
         if (sub.key === personalInfo.district) {
-          districtName = `${dist.name} - ${sub.value}`
+          districtName = `${dist.name} - ${sub.value}`;
         }
-      })
+      });
     });
 
     return districtName;
-  }, [personalInfo.district])
+  }, [personalInfo.district]);
 
   return (
     <React.Fragment>
@@ -60,9 +60,10 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
-                {personalInfo.firstName} {personalInfo.middleName} {personalInfo.lastName}
+                {personalInfo.firstName} {personalInfo.middleName}{" "}
+                {personalInfo.lastName}
               </Typography>
             </ListItem>
             <ListItem>
@@ -70,9 +71,9 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
-                {format(personalInfo.birthdate!, 'MMMM dd, yyyy')}
+                {format(personalInfo.birthdate!, "MMMM dd, yyyy")}
               </Typography>
             </ListItem>
             <ListItem>
@@ -80,9 +81,9 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
-                {personalInfo.gender === Gender.Male ? 'Male' : 'Female'}
+                {personalInfo.gender === Gender.Male ? "Male" : "Female"}
               </Typography>
             </ListItem>
             <ListItem>
@@ -90,7 +91,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {personalInfo.status.toLocaleUpperCase()}
               </Typography>
@@ -100,7 +101,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {personalInfo.address}
               </Typography>
@@ -110,7 +111,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {personalInfo.barangay}
               </Typography>
@@ -120,7 +121,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {personalDistrict}
               </Typography>
@@ -130,7 +131,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {personalInfo.city}, {personalInfo.region}
               </Typography>
@@ -148,7 +149,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {churchInfo.networkHead}
               </Typography>
@@ -158,7 +159,7 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
                 {churchInfo.leadershipLevel}
               </Typography>
@@ -168,64 +169,71 @@ export default function ReviewInformation() {
               <Typography
                 variant="body2"
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
+                color="primary"
               >
-                {format(churchInfo.divineAppointmentDate!, 'MMMM, yyyy')}
+                {format(churchInfo.divineAppointmentDate!, "MMMM, yyyy")}
               </Typography>
             </ListItem>
           </List>
         </Box>
-        {votersInfo.isRegistered ? (<Box>
-          <Typography fontWeight="700" gutterBottom>
-            Voters Address
-          </Typography>
-          <Divider sx={{ my: 2 }} />
-          <List disablePadding>
-            <ListItem>
-              <ListItemText primary="Precint ID" />
-              <Typography
-                variant="body2"
-                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
-              >
-                {votersInfo.precinctId || ''}
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Barangay" />
-              <Typography
-                variant="body2"
-                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
-              >
-                {votersInfo.barangay}
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="District" />
-              <Typography
-                variant="body2"
-                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
-              >
-                {votersDistrict}
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="City/Region" />
-              <Typography
-                variant="body2"
-                sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
-                color='primary'
-              >
-                {votersInfo.city}, {votersInfo.region}
-              </Typography>
-            </ListItem>
-          </List>
-        </Box>) : (
-          <Box sx={{ mb: 2}}>
+        {votersInfo.isRegistered ? (
+          <Box>
+            <Typography fontWeight="700" gutterBottom>
+              Voters Address
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <List disablePadding>
+              <ListItem>
+                <ListItemText primary="Precint ID" />
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                  color="primary"
+                >
+                  {votersInfo.votingPrecinctId || ""}
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Barangay" />
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                  color="primary"
+                >
+                  {votersInfo.votingBarangay}
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="District" />
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                  color="primary"
+                >
+                  {votersDistrict}
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="City/Region" />
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
+                  color="primary"
+                >
+                  {votersInfo.votingCity}, {votersInfo.votingRegion}
+                </Typography>
+              </ListItem>
+            </List>
+          </Box>
+        ) : (
+          <Box sx={{ mb: 2 }}>
             <Divider sx={{ my: 3 }} />
-            <Typography textAlign='center' variant="body1" fontStyle='italic' color='gray'>
+            <Typography
+              textAlign="center"
+              variant="body1"
+              fontStyle="italic"
+              color="gray"
+            >
               Currently not registered as a voter
             </Typography>
           </Box>

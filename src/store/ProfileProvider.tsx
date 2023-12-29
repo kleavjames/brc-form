@@ -1,25 +1,22 @@
-import { FC, ReactNode, createContext, useCallback, useMemo, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  ChurchInformation,
-  Gender,
-  LeadershipLevel,
-  PersonalInformation,
-  Status,
-  VotersInformation,
-} from "../types/information";
+  FC,
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { Gender, LeadershipLevel, Status } from "../types/information";
+import { deleteProfile, getProfiles, updateProfile } from "../api/profiles";
+import { Profile } from "../types/profile";
+import { useToast } from "../hooks/useToast";
 
 type ProfileProps = {
-  personalInfo: PersonalInformation;
-  churchInfo: ChurchInformation;
-  votersInfo: VotersInformation;
-  setPersonalInfo: React.Dispatch<React.SetStateAction<PersonalInformation>>;
-  setChurchInfo: React.Dispatch<React.SetStateAction<ChurchInformation>>;
-  setVotersInfo: React.Dispatch<React.SetStateAction<VotersInformation>>;
-  handleSubmit: () => void;
-  handleResetInfo: () => void;
-  validProfileInfo: boolean;
-  validChurchInfo: boolean;
-  validVotersInfo: boolean;
+  profile: Profile[];
+  initialProfile: Profile;
+  onHandleUpdate: (profile: Profile, id: string) => Promise<void>;
+  onHandleDelete: (id: string) => Promise<void>;
 };
 
 type Props = {
@@ -27,131 +24,87 @@ type Props = {
 };
 
 const initialState = {
-  personalInformation: {
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    birthdate: null,
-    gender: Gender.Male,
-    status: Status.Married,
-    address: "",
-    district: "poblacion",
-    barangay: "1-A",
-    city: "",
-    region: "",
-  },
-  churchInformation: {
-    networkHead: "",
-    leadershipLevel: LeadershipLevel.TwoEightEight,
-    divineAppointmentDate: null,
-  },
-  votersInformation: {
-    isRegistered: false,
-    precinctId: null,
-    barangay: null,
-    city: null,
-    district: null,
-    region: null,
-  },
+  firstName: "",
+  lastName: "",
+  middleName: "",
+  birthdate: null,
+  gender: Gender.Male,
+  status: Status.Married,
+  address: "",
+  district: "poblacion",
+  districtNumber: 0,
+  barangay: "1-A",
+  city: "",
+  region: "",
+  networkHead: "",
+  leadershipLevel: LeadershipLevel.TwoEightEight,
+  divineAppointmentDate: null,
+  isRegistered: false,
+  votingPrecinctId: null,
+  votingBarangay: null,
+  votingCity: null,
+  votingDistrict: null,
+  votingDistrictNumber: null,
+  votingRegion: null,
 };
 
 const ProfileContext = createContext<ProfileProps>({
-  personalInfo: initialState.personalInformation,
-  churchInfo: initialState.churchInformation,
-  votersInfo: initialState.votersInformation,
-  setPersonalInfo: () => {},
-  setChurchInfo: () => {},
-  setVotersInfo: () => {},
-  handleSubmit: () => {},
-  handleResetInfo: () => {},
-  validProfileInfo: false,
-  validChurchInfo: false,
-  validVotersInfo: false,
+  profile: [],
+  initialProfile: initialState,
+  onHandleUpdate: async () => {},
+  onHandleDelete: async () => {},
 });
 
 const ProfileProvider: FC<Props> = ({ children }) => {
-  const [personalInfo, setPersonalInfo] = useState<PersonalInformation>(
-    initialState.personalInformation
+  const [userProfile, setUserProfile] = useState<Profile[]>([]);
+  const { toastSuccess, toastError } = useToast();
+
+  const fetchProfiles = useCallback(async () => {
+    try {
+      const profiles = await getProfiles();
+      setUserProfile(profiles);
+    } catch (error: any) {
+      toastError(error.message);
+    }
+  }, [toastError]);
+
+  useEffect(() => {
+    fetchProfiles();
+  }, [fetchProfiles]);
+
+  const onHandleUpdate = useCallback(
+    async (profile: Profile, id: string) => {
+      try {
+        await updateProfile(profile, id);
+        await fetchProfiles();
+        toastSuccess("Successfully updated the profile");
+      } catch (error: any) {
+        toastError(error.message);
+      }
+    },
+    [fetchProfiles, toastError, toastSuccess]
   );
-  const [churchInfo, setChurchInfo] = useState<ChurchInformation>(
-    initialState.churchInformation
+
+  const onHandleDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteProfile(id);
+        fetchProfiles();
+        toastSuccess("Successfully deleted the profile");
+      } catch (error: any) {
+        toastError(error.message);
+      }
+    },
+    [fetchProfiles, toastError, toastSuccess]
   );
-  const [votersInfo, setVotersInfo] = useState<VotersInformation>(
-    initialState.votersInformation
-  );
-
-  const validProfileInfo = useMemo(() => {
-    const {
-      firstName,
-      lastName,
-      middleName,
-      birthdate,
-      address,
-      city,
-      region,
-    } = personalInfo;
-    if (
-      !firstName ||
-      !lastName ||
-      !middleName ||
-      !birthdate ||
-      !address ||
-      !city ||
-      !region
-    ) {
-      return false;
-    }
-    return true;
-  }, [personalInfo]);
-
-  const validChurchInfo = useMemo(() => {
-    const { leadershipLevel, divineAppointmentDate, networkHead } = churchInfo;
-    if (
-      (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
-      !divineAppointmentDate
-    ) {
-      return false;
-    }
-    return true;
-  }, [churchInfo]);
-
-  const validVotersInfo = useMemo(() => {
-    const { isRegistered, district, barangay, city, region } = votersInfo;
-    if (!isRegistered) {
-      return true;
-    }
-    if (!district || !barangay || !city || !region) {
-      return false;
-    }
-    return true;
-  }, [votersInfo]);
-
-  const handleSubmit = useCallback(() => {
-    console.log("personal", personalInfo);
-    console.log("church", churchInfo);
-    console.log("voters", votersInfo);
-  }, [churchInfo, personalInfo, votersInfo]);
-
-  const handleResetInfo = useCallback(() => {
-    setPersonalInfo(initialState.personalInformation);
-    setChurchInfo(initialState.churchInformation);
-    setVotersInfo(initialState.votersInformation);
-  }, [])
 
   return (
     <ProfileContext.Provider
       value={{
-        personalInfo,
-        churchInfo,
-        votersInfo,
-        setPersonalInfo,
-        setChurchInfo,
-        setVotersInfo,
-        handleSubmit,
-        validProfileInfo,
-        validChurchInfo,
-        validVotersInfo,
-        handleResetInfo,
+        profile: userProfile,
+        initialProfile: initialState,
+        onHandleUpdate,
+        onHandleDelete,
       }}
     >
       {children}

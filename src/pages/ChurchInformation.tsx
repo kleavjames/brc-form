@@ -8,10 +8,10 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { LeadershipLevel } from "../types/information";
 import NetworkHeadsSelect from "../components/NetworkHeadsSelect";
-import { useProfile } from "../hooks/useProfile";
+import { useRegisterProfile } from "../hooks/useRegisterProfile";
 
 export default function ChurchInformation() {
-  const { churchInfo, setChurchInfo } = useProfile();
+  const { churchInfo, setChurchInfo } = useRegisterProfile();
 
   return (
     <React.Fragment>

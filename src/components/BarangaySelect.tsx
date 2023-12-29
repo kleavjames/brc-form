@@ -12,6 +12,7 @@ type Props = {
   districtValue: string;
   selectedValue: any;
   disabled?: boolean;
+  forVoter?: boolean;
 };
 
 const BarangaySelect: FC<Props> = ({
@@ -19,6 +20,7 @@ const BarangaySelect: FC<Props> = ({
   selectedValue,
   districtValue = "poblacion",
   disabled = false,
+  forVoter = false,
 }) => {
   const renderBarangays = useCallback(() => {
     return (barangays as unknown as Barangays)[districtValue].map(
@@ -42,9 +44,9 @@ const BarangaySelect: FC<Props> = ({
         </InputLabel>
         <Select
           labelId="barangay-select-label"
-          id="barangay"
+          id={forVoter ? "votingBarangay" : "barangay"}
           disabled={disabled}
-          name="barangay"
+          name={forVoter ? "votingBarangay" : "barangay"}
           label="Barangay"
           value={selectedValue}
           defaultValue={""}
