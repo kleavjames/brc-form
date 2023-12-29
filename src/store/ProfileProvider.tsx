@@ -63,7 +63,6 @@ const ProfileProvider: FC<Props> = ({ children }) => {
     try {
       const profiles = await getProfiles();
       setUserProfile(profiles);
-      console.log(profiles);
     } catch (error: any) {
       toastError(error.message);
     }
