@@ -5,8 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+// import Badge from "@mui/material/Badge";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const drawerWidth: number = 240;
@@ -44,24 +44,12 @@ const HeaderBar: FC<HeaderBarProps> = ({ open, toggleDrawer }) => {
 
   if (matches) {
     return (
-      <AppBar position="absolute" open={open}>
+      <AppBar position="absolute">
         <Toolbar
           sx={{
             pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             component="h1"
             variant="h6"
@@ -71,11 +59,11 @@ const HeaderBar: FC<HeaderBarProps> = ({ open, toggleDrawer }) => {
           >
             BRC Profiling
           </Typography>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
         </Toolbar>
       </AppBar>
     );
@@ -94,7 +82,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ open, toggleDrawer }) => {
           aria-label="open drawer"
           onClick={toggleDrawer}
           sx={{
-            marginRight: "36px",
+            mr: 2,
             ...(open && { display: "none" }),
           }}
         >
@@ -109,11 +97,11 @@ const HeaderBar: FC<HeaderBarProps> = ({ open, toggleDrawer }) => {
         >
           BRC Profiling
         </Typography>
-        <IconButton color="inherit">
+        {/* <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">
             <NotificationsIcon />
           </Badge>
-        </IconButton>
+        </IconButton> */}
       </Toolbar>
     </MuiAppBar>
   );

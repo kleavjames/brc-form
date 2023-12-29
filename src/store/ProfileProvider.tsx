@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   FC,
   ReactNode,
@@ -9,8 +10,7 @@ import {
 import { Gender, LeadershipLevel, Status } from "../types/information";
 import { deleteProfile, getProfiles, updateProfile } from "../api/profiles";
 import { Profile } from "../types/profile";
-import { toast } from "react-toastify";
-import { errorToast, successToast } from "../config/toastConfig";
+import { useToast } from "../hooks/useToast";
 
 type ProfileProps = {
   profile: Profile[];
@@ -57,11 +57,17 @@ const ProfileContext = createContext<ProfileProps>({
 
 const ProfileProvider: FC<Props> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<Profile[]>([]);
+  const { toastSuccess, toastError } = useToast();
 
   const fetchProfiles = useCallback(async () => {
-    const profiles = await getProfiles();
-    setUserProfile(profiles);
-  }, []);
+    try {
+      const profiles = await getProfiles();
+      setUserProfile(profiles);
+      console.log(profiles);
+    } catch (error: any) {
+      toastError(error.message);
+    }
+  }, [toastError]);
 
   useEffect(() => {
     fetchProfiles();
@@ -71,13 +77,13 @@ const ProfileProvider: FC<Props> = ({ children }) => {
     async (profile: Profile, id: string) => {
       try {
         await updateProfile(profile, id);
-        fetchProfiles();
-        toast.success("Successfully updated the profile", successToast);
-      } catch (error) {
-        toast.error("Failed to update profile", errorToast);
+        await fetchProfiles();
+        toastSuccess("Successfully updated the profile");
+      } catch (error: any) {
+        toastError(error.message);
       }
     },
-    [fetchProfiles]
+    [fetchProfiles, toastError, toastSuccess]
   );
 
   const onHandleDelete = useCallback(
@@ -85,12 +91,12 @@ const ProfileProvider: FC<Props> = ({ children }) => {
       try {
         await deleteProfile(id);
         fetchProfiles();
-        toast.success("Successfully deleted the profile", successToast);
-      } catch (error) {
-        toast.error("Failed to delete profile", errorToast);
+        toastSuccess("Successfully deleted the profile");
+      } catch (error: any) {
+        toastError(error.message);
       }
     },
-    [fetchProfiles]
+    [fetchProfiles, toastError, toastSuccess]
   );
 
   return (

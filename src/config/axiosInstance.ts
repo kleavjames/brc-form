@@ -29,31 +29,26 @@ export const errorHandler = (error: unknown) => {
   if (axios.isAxiosError(error)) {
     if (error.code === "ECONNABORTED") {
       return {
-        success: false,
         message:
           "Problem with internet connection. Please make sure your internet is stable.",
       };
     } else if (error.code === "ERR_NETWORK") {
       return {
-        success: false,
         message:
           "Problem with internet connection. Please make sure your internet is stable.",
       };
     } else if (error.code === "ERR_BAD_REQUEST") {
       const data = error.response?.data;
       return {
-        success: false,
         message: data.error,
       };
     } else {
       return {
-        success: false,
         message: "Something went wrong. Please try again later.",
       };
     }
   } else {
     return {
-      success: false,
       message: "Something went wrong. Please try again later.",
     };
   }

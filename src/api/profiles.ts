@@ -6,7 +6,7 @@ export const getProfiles = async () => {
     const response = await instance.get("/profiles");
     return response.data;
   } catch (error) {
-    return errorHandler(error);
+    throw errorHandler(error);
   }
 };
 
@@ -17,7 +17,7 @@ export const addProfile = async (profile: Profile) => {
     });
     return response.data;
   } catch (error) {
-    return errorHandler(error);
+    throw errorHandler(error);
   }
 };
 
@@ -27,7 +27,7 @@ export const updateProfile = async (profile: Profile, id: string) => {
       ...profile,
     });
   } catch (error) {
-    return errorHandler(error);
+    throw errorHandler(error);
   }
 };
 
@@ -35,6 +35,6 @@ export const deleteProfile = async (id: string) => {
   try {
     await instance.delete(`/profiles/${id}`);
   } catch (error) {
-    return errorHandler(error);
+    throw errorHandler(error);
   }
 };

@@ -12,6 +12,7 @@ import VotersInformation from "./VotersInformation";
 import ReviewInformation from "./ReviewInformation";
 import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import Grid from "@mui/material/Grid";
+import { useToast } from "../hooks/useToast";
 
 const steps = ["Personal", "Church", "Voter's Info", "Review"];
 
@@ -38,19 +39,25 @@ export default function Registration() {
     validChurchInfo,
     validVotersInfo,
   } = useRegisterProfile();
+  const { toastSuccess, toastError } = useToast();
 
   const [activeStep, setActiveStep] = React.useState(0);
 
   const resetStep = () => {
     handleResetInfo();
-    setActiveStep(0);
+    setActiveStep(activeStep - 1);
   };
 
   const handleNext = async () => {
-    if (activeStep === steps.length - 1) {
-      await handleSubmit();
+    try {
+      if (activeStep === steps.length - 1) {
+        await handleSubmit();
+        toastSuccess("Profile created successfully");
+      }
+      setActiveStep(activeStep + 1);
+    } catch (error) {
+      toastError(error as string);
     }
-    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
@@ -79,6 +86,7 @@ export default function Registration() {
               {activeStep === steps.length ? "Complete!" : "Registration"}
             </Typography>
             <Stepper
+              color="secondary"
               activeStep={activeStep}
               sx={{ pt: 3, pb: 5 }}
               alternativeLabel

@@ -1,19 +1,18 @@
 import { FC } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { styled, useTheme } from "@mui/material/styles";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useLocation, useNavigate } from "react-router-dom";
+import BRCLogo from "../assets/BRC_logo.png";
+import Box from "@mui/material/Box";
 
 const drawerWidth: number = 240;
 
@@ -56,7 +55,7 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
 
   if (matches) {
     return (
-      <DesktopDrawer variant="permanent" open={open}>
+      <DesktopDrawer variant="permanent" open>
         <Toolbar
           sx={{
             display: "flex",
@@ -64,37 +63,49 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
             justifyContent: "flex-end",
             px: [1],
           }}
-        >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <Divider />
+        ></Toolbar>
         <List component="nav">
-          <ListItemButton disabled>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
           <ListItemButton
             onClick={() => navigate("/")}
             selected={location.pathname === "/"}
           >
             <ListItemIcon>
-              <ContactPageIcon />
+              <ContactPageIcon
+                color={location.pathname === "/" ? "primary" : "action"}
+              />
             </ListItemIcon>
-            <ListItemText primary="Profiles" />
+            <ListItemText
+              primary="Profiles"
+              sx={{
+                color: ({ palette }) =>
+                  location.pathname === "/"
+                    ? palette.primary.main
+                    : theme.palette.action.activatedOpacity,
+              }}
+            />
           </ListItemButton>
           <ListItemButton
             onClick={() => navigate("/register")}
             selected={location.pathname === "/register"}
           >
             <ListItemIcon>
-              <PersonAddAlt1Icon />
+              <PersonAddAlt1Icon
+                color={location.pathname === "/register" ? "primary" : "action"}
+              />
             </ListItemIcon>
-            <ListItemText primary="Register" />
+            <ListItemText
+              primary="Register"
+              sx={{
+                color: ({ palette }) =>
+                  location.pathname === "/register"
+                    ? palette.primary.main
+                    : theme.palette.action.activatedOpacity,
+              }}
+            />
           </ListItemButton>
+          <Box sx={{ position: "fixed", bottom: 0, left: 15 }}>
+            <img src={BRCLogo} width={200} />
+          </Box>
         </List>
       </DesktopDrawer>
     );
@@ -119,35 +130,55 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
           px: [1],
         }}
       >
-        <IconButton onClick={toggleDrawer}>
-          <ChevronLeftIcon />
-        </IconButton>
+        <Box sx={{ mx: "auto" }}>
+          <img src={BRCLogo} width={100} />
+        </Box>
       </Toolbar>
       <Divider />
       <List component="nav" disablePadding>
-        <ListItemButton disabled>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
         <ListItemButton
-          onClick={() => navigate("/")}
+          onClick={() => {
+            navigate("/");
+            toggleDrawer();
+          }}
           selected={location.pathname === "/"}
         >
           <ListItemIcon>
-            <ContactPageIcon />
+            <ContactPageIcon
+              color={location.pathname === "/" ? "primary" : "action"}
+            />
           </ListItemIcon>
-          <ListItemText primary="Profiles" />
+          <ListItemText
+            primary="Profiles"
+            sx={{
+              color: ({ palette }) =>
+                location.pathname === "/"
+                  ? palette.primary.main
+                  : theme.palette.action.activatedOpacity,
+            }}
+          />
         </ListItemButton>
         <ListItemButton
-          onClick={() => navigate("/register")}
+          onClick={() => {
+            navigate("/register");
+            toggleDrawer();
+          }}
           selected={location.pathname === "/register"}
         >
           <ListItemIcon>
-            <PersonAddAlt1Icon />
+            <PersonAddAlt1Icon
+              color={location.pathname === "/register" ? "primary" : "action"}
+            />
           </ListItemIcon>
-          <ListItemText primary="Register" />
+          <ListItemText
+            primary="Register"
+            sx={{
+              color: ({ palette }) =>
+                location.pathname === "/register"
+                  ? palette.primary.main
+                  : theme.palette.action.activatedOpacity,
+            }}
+          />
         </ListItemButton>
       </List>
     </MuiDrawer>

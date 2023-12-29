@@ -233,6 +233,15 @@ const Profiles = () => {
         onHandleUpdate={onHandleUpdate}
         onHandleDelete={onHandleDelete}
       />
+      <Grid container>
+        <Grid item xs={12}>
+          <Paper elevation={0} sx={{ mx: 3, mt: 3, p: { xs: 2, md: 3 } }}>
+            <Typography color="primary" variant="h4" fontWeight="500">
+              LEADERS PROFILE
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
       <Grid>
         <Grid item xs={12} sx={{ m: 3 }}>
           <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
@@ -254,7 +263,9 @@ const Profiles = () => {
               onRowDoubleClick={handleRowClick}
               pageSizeOptions={[10, 25, 50, 100]}
               experimentalFeatures={{ columnGrouping: true }}
-              slots={{ toolbar: GridToolbar }}
+              slots={{
+                toolbar: GridToolbar,
+              }}
               columnGroupingModel={columnGroupingModel}
             />
           </Paper>

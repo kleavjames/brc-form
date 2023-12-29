@@ -1,8 +1,16 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#5e367f",
+    },
+    secondary: {
+      main: "#febd22",
+    },
+  },
   typography: {
-    fontFamily: 'IBM Plex Sans'
+    fontFamily: "IBM Plex Sans",
   },
   components: {
     MuiCssBaseline: {

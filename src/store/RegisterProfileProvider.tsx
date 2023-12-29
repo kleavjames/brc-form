@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   FC,
   ReactNode,
@@ -15,8 +16,7 @@ import {
   VotersInformation,
 } from "../types/information";
 import { addProfile } from "../api/profiles";
-import { toast } from "react-toastify";
-import { errorToast, successToast } from "../config/toastConfig";
+import { useToast } from "../hooks/useToast";
 
 type RegisterProfileProps = {
   personalInfo: PersonalInformation;
@@ -82,6 +82,8 @@ const RegisterProfileContext = createContext<RegisterProfileProps>({
 });
 
 const RegisterProfileProvider: FC<Props> = ({ children }) => {
+  const { toastError } = useToast();
+
   const [personalInfo, setPersonalInfo] = useState<PersonalInformation>(
     initialState.personalInformation
   );
@@ -151,12 +153,11 @@ const RegisterProfileProvider: FC<Props> = ({ children }) => {
         ...churchInfo,
         ...votersInfo,
       });
-
-      toast.success("Successfully created the profile", successToast);
-    } catch (error) {
-      toast.error("Failed to create profile", errorToast);
+    } catch (error: any) {
+      toastError(error.message);
+      throw new Error(error.message);
     }
-  }, [churchInfo, personalInfo, votersInfo]);
+  }, [churchInfo, personalInfo, toastError, votersInfo]);
 
   const handleResetInfo = useCallback(() => {
     setPersonalInfo(initialState.personalInformation);
