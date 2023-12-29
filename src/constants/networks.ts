@@ -1,102 +1,106 @@
 export const networkHeads = [
   {
     id: 1,
-    name: 'Bishop Rod Cubos'
+    name: "Bishop Rod Cubos",
   },
   {
     id: 2,
-    name: 'Bishop Ruth Cubos'
+    name: "Bishop Ruth Cubos",
   },
   {
     id: 3,
-    name: 'Pastor Rowena Donato'
+    name: "Ps. Rowena Donato",
   },
   {
     id: 4,
-    name: 'Pastor Reynald Barcena'
+    name: "Ps. Reylan Barcena",
   },
   {
     id: 5,
-    name: 'Pastor Pamela Pearl Olmedo'
+    name: "Ps. Pamela Pearl Olmedo",
   },
   {
     id: 6,
-    name: 'Pastor James Jimenez'
+    name: "Ps. James Jimenez",
   },
   {
     id: 7,
-    name: 'Pastor Mary Crystel Abrenica'
+    name: "Ps. Mary Crystel Abrenica",
   },
   {
     id: 8,
-    name: 'Pastor Duane Gencianos'
+    name: "Ps. Duane Jeff Gencianos",
   },
   {
     id: 8,
-    name: 'Pastor Felochie Gencianos'
+    name: "Ps. Felochie Gencianos",
   },
   {
     id: 9,
-    name: 'Pastor Rojie Olave'
+    name: "Ps. Rojie Olave",
   },
   {
     id: 10,
-    name: 'Pastor Napoleon Sabes'
+    name: "Ps. Napoleon Sabes",
   },
   {
     id: 11,
-    name: 'Pastor Junrich Malolot'
+    name: "Ps. Junrich Malolot",
   },
   {
     id: 12,
-    name: 'Pastor Jove Malolot'
+    name: "Ps. Jove Malolot",
   },
   {
     id: 13,
-    name: 'Pastor Janeth Jabines'
+    name: "Ps. Janeth Jabines",
   },
   {
     id: 14,
-    name: 'Pastor Ojeng Jabines'
+    name: "Ps. Rogelio Jabines",
   },
   {
     id: 15,
-    name: 'Pastor Lloyd Jason Gualvez'
+    name: "Ps. Lloyd Jason Gualvez",
   },
   {
     id: 16,
-    name: 'Pastor Kariz Ayah Martirez'
+    name: "Ps. Kariz Ayah Martirez",
   },
   {
     id: 17,
-    name: 'Pastor Ninong'
+    name: "Ps. Ruthillo 'Ninong' Fuentes",
   },
   {
     id: 18,
-    name: 'Pastor Yang'
+    name: "Ps. Rhia Felipas",
   },
   {
     id: 19,
-    name: 'Pastor Victor Montesclaros'
+    name: "Ps. Victor Montesclaros Jr",
   },
   {
     id: 20,
-    name: 'Pastor Melogen Montesclaros'
+    name: "Ps. Melogen Montesclaros",
   },
   {
     id: 21,
-    name: 'Pastor Angela Dawa'
+    name: "Ps. Angela Dawa",
   },
   {
     id: 22,
-    name: 'Pastor Efren'
+    name: "Ps. Efren Desierto",
   },
   {
     id: 23,
-    name: 'Pastor Bebz'
+    name: "Ps. Rosalee 'Bebs' Guevarra",
   },
   {
     id: 24,
-    name: 'Pastor Pinay'
+    name: "Ps. Glocerpina Loyola",
   },
-]
+  {
+    id: 25,
+    name: "Ps. Rhodora Barcena",
+  },
+];
