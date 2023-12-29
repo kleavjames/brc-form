@@ -17,6 +17,7 @@ import {
 } from "../types/information";
 import { addProfile } from "../api/profiles";
 import { useToast } from "../hooks/useToast";
+import { useProfile } from "../hooks/useProfile";
 
 type RegisterProfileProps = {
   personalInfo: PersonalInformation;
@@ -82,6 +83,7 @@ const RegisterProfileContext = createContext<RegisterProfileProps>({
 });
 
 const RegisterProfileProvider: FC<Props> = ({ children }) => {
+  const { fetchProfiles } = useProfile();
   const { toastError } = useToast();
 
   const [personalInfo, setPersonalInfo] = useState<PersonalInformation>(
@@ -153,11 +155,12 @@ const RegisterProfileProvider: FC<Props> = ({ children }) => {
         ...churchInfo,
         ...votersInfo,
       });
+      await fetchProfiles();
     } catch (error: any) {
       toastError(error.message);
       throw new Error(error.message);
     }
-  }, [churchInfo, personalInfo, toastError, votersInfo]);
+  }, [churchInfo, fetchProfiles, personalInfo, toastError, votersInfo]);
 
   const handleResetInfo = useCallback(() => {
     setPersonalInfo(initialState.personalInformation);

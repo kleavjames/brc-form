@@ -17,6 +17,7 @@ type ProfileProps = {
   initialProfile: Profile;
   onHandleUpdate: (profile: Profile, id: string) => Promise<void>;
   onHandleDelete: (id: string) => Promise<void>;
+  fetchProfiles: () => Promise<void>;
 };
 
 type Props = {
@@ -53,6 +54,7 @@ const ProfileContext = createContext<ProfileProps>({
   initialProfile: initialState,
   onHandleUpdate: async () => {},
   onHandleDelete: async () => {},
+  fetchProfiles: async () => {},
 });
 
 const ProfileProvider: FC<Props> = ({ children }) => {
@@ -105,6 +107,7 @@ const ProfileProvider: FC<Props> = ({ children }) => {
         initialProfile: initialState,
         onHandleUpdate,
         onHandleDelete,
+        fetchProfiles,
       }}
     >
       {children}
