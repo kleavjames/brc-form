@@ -45,7 +45,7 @@ export default function Registration() {
 
   const resetStep = () => {
     handleResetInfo();
-    setActiveStep(activeStep - 1);
+    setActiveStep(0);
   };
 
   const handleNext = async () => {
