@@ -6,57 +6,45 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import BarangaySelect from "../components/BarangaySelect";
 import DistrictSelect from "../components/DistrictSelect";
-import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import { useCallback } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { barangays } from "../constants/barangay";
-import { Barangays } from "../types/information";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { selectVotersInfo } from "../redux/profiles/selectors";
+import { actions } from "../redux/profiles/slice";
 
 export default function VotersInformation() {
-  const { votersInfo, setVotersInfo } = useRegisterProfile();
+  const dispatch = useAppDispatch();
+  const votersInfo = useAppSelector(selectVotersInfo);
 
-  const handleVoteChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.checked) {
-      setVotersInfo({
-        votingPrecinctId: null,
-        votingBarangay: null,
-        votingDistrict: null,
-        votingDistrictNumber: null,
-        votingCity: null,
-        votingRegion: null,
-        isRegistered: e.target.checked,
-      });
-      return;
-    }
-
-    setVotersInfo((prevProps) => ({
-      ...prevProps,
-      [e.target.name]: e.target.checked,
-    }));
-  };
-
-  const onSelectDistrict = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setVotersInfo((prevProps) => ({
-        ...prevProps,
-        [e.target.name]: e.target.value,
-      }));
+  const handleVoteChecked = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(actions.setVoterInfoIsRegistered(e.target.checked));
     },
-    [setVotersInfo]
+    [dispatch]
   );
 
-  const onSelectBarangay = useCallback(
+  const onSelectChange = useCallback(
     (e: SelectChangeEvent<string>) => {
-      const districtNum = (barangays as unknown as Barangays)[
-        votersInfo.votingDistrict!
-      ][0].district;
-      setVotersInfo((prevProps) => ({
-        ...prevProps,
-        votingDistrictNumber: districtNum,
-        [e.target.name]: e.target.value,
-      }));
+      dispatch(
+        actions.setVotersInformation({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
     },
-    [votersInfo.votingDistrict, setVotersInfo]
+    [dispatch]
+  );
+
+  const onChangeText = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      dispatch(
+        actions.setVotersInformation({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
+    },
+    [dispatch]
   );
 
   return (
@@ -93,18 +81,13 @@ export default function VotersInformation() {
             fullWidth
             autoComplete="precinct-id"
             variant="standard"
-            onChange={(e) => {
-              setVotersInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangeText}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <DistrictSelect
             forVoter
-            onSelect={onSelectDistrict}
+            onSelect={onSelectChange}
             disabled={!votersInfo.isRegistered}
             selectedValue={
               votersInfo.votingDistrict ? votersInfo.votingDistrict : ""
@@ -114,7 +97,7 @@ export default function VotersInformation() {
         <Grid item xs={12} sm={6}>
           <BarangaySelect
             forVoter
-            onSelect={onSelectBarangay}
+            onSelect={onSelectChange}
             disabled={!votersInfo.isRegistered}
             districtValue={votersInfo.votingDistrict || "poblacion"}
             selectedValue={
@@ -133,12 +116,7 @@ export default function VotersInformation() {
             value={votersInfo.votingCity || ""}
             autoComplete="personal address-city"
             variant="standard"
-            onChange={(e) => {
-              setVotersInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangeText}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -151,12 +129,7 @@ export default function VotersInformation() {
             value={votersInfo.votingRegion || ""}
             autoComplete="personal address-region"
             variant="standard"
-            onChange={(e) => {
-              setVotersInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangeText}
           />
         </Grid>
       </Grid>

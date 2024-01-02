@@ -1,20 +1,27 @@
 // import React from 'react'
 import Box from "@mui/material/Box";
 import Registration from "./pages/Registration";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderBar from "./components/HeaderBar";
 import Sidebar from "./components/Sidebar";
 import Toolbar from "@mui/material/Toolbar";
 import { Route, Routes } from "react-router-dom";
 import Profiles from "./pages/Profiles";
 import Login from "./pages/Login";
+import { useAppDispatch } from "./redux/store";
+import { loadProfileThunks } from "./redux/profiles/thunks";
 
 const App = () => {
-  // const [open, setOpen] = useState(true);
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(true);
 
-  // const toggleDrawer = () => {
-  //   setOpen(!open);
-  // };
+  useEffect(() => {
+    dispatch(loadProfileThunks());
+  }, [dispatch]);
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
