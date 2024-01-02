@@ -7,18 +7,19 @@ import Sidebar from "./components/Sidebar";
 import Toolbar from "@mui/material/Toolbar";
 import { Route, Routes } from "react-router-dom";
 import Profiles from "./pages/Profiles";
+import Login from "./pages/Login";
 
 const App = () => {
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
 
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  // const toggleDrawer = () => {
+  //   setOpen(!open);
+  // };
 
   return (
     <Box sx={{ display: "flex" }}>
-      <HeaderBar open={open} toggleDrawer={toggleDrawer} />
-      <Sidebar open={open} toggleDrawer={toggleDrawer} />
+      {/* <HeaderBar open={open} toggleDrawer={toggleDrawer} />
+      <Sidebar open={open} toggleDrawer={toggleDrawer} /> */}
       <Box
         component="main"
         sx={{
@@ -31,16 +32,12 @@ const App = () => {
           overflow: "auto",
         }}
       >
-        <Toolbar />
-        {/* <Grid container>
-          <Grid item xs={12} md={8} sx={{ m: 3 }}>
-            <Registration />
-          </Grid>
-        </Grid> */}
+        <Login />
+        {/* <Toolbar />
         <Routes>
           <Route path="/" element={<Profiles />} />
           <Route path="/register" element={<Registration />} />
-        </Routes>
+        </Routes> */}
       </Box>
     </Box>
   );
