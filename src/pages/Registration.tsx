@@ -10,9 +10,15 @@ import PersonalInformation from "./PersonalInformation";
 import ChurchInformation from "./ChurchInformation";
 import VotersInformation from "./VotersInformation";
 import ReviewInformation from "./ReviewInformation";
-import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import Grid from "@mui/material/Grid";
-import { useToast } from "../hooks/useToast";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import {
+  selectValidChurchInfo,
+  selectValidProfileInfo,
+  selectValidVotersInfo,
+} from "../redux/profiles/selectors";
+import { actions } from "../redux/profiles/slice";
+import Loader from "../components/Loader";
 
 const steps = ["Personal", "Church", "Voter's Info", "Review"];
 
@@ -32,32 +38,26 @@ function getStepContent(step: number) {
 }
 
 export default function Registration() {
-  const {
-    handleSubmit,
-    handleResetInfo,
-    validProfileInfo,
-    validChurchInfo,
-    validVotersInfo,
-  } = useRegisterProfile();
-  const { toastSuccess, toastError } = useToast();
+  const dispatch = useAppDispatch();
+  const isValidProfileInfo = useAppSelector(selectValidProfileInfo);
+  const isValidChurchInfo = useAppSelector(selectValidChurchInfo);
+  const isValidVotersInfo = useAppSelector(selectValidVotersInfo);
+  const loadingProfile = useAppSelector(
+    (state) => state.profiles.loadingProfile
+  );
 
   const [activeStep, setActiveStep] = React.useState(0);
 
   const resetStep = () => {
-    handleResetInfo();
+    dispatch(actions.setResetProfileInfo());
     setActiveStep(0);
   };
 
   const handleNext = async () => {
-    try {
-      if (activeStep === steps.length - 1) {
-        await handleSubmit();
-        toastSuccess("Profile created successfully");
-      }
-      setActiveStep(activeStep + 1);
-    } catch (error) {
-      toastError(error as string);
+    if (activeStep === steps.length - 1) {
+      await dispatch(actions.submitProfileThunk()).unwrap();
     }
+    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
@@ -67,11 +67,11 @@ export default function Registration() {
   const isValid = () => {
     switch (activeStep) {
       case 0:
-        return !validProfileInfo;
+        return !isValidProfileInfo;
       case 1:
-        return !validChurchInfo;
+        return !isValidChurchInfo;
       case 2:
-        return !validVotersInfo;
+        return !isValidVotersInfo;
       default:
         return false;
     }
@@ -79,6 +79,7 @@ export default function Registration() {
 
   return (
     <React.Fragment>
+      <Loader loading={loadingProfile} />
       <Grid container>
         <Grid item xs={12} md={8} sx={{ m: 3 }}>
           <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>

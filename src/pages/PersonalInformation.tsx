@@ -7,37 +7,58 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Barangays, Gender, Status } from "../types/information";
 import DistrictSelect from "../components/DistrictSelect";
 import BarangaySelect from "../components/BarangaySelect";
-import { useRegisterProfile } from "../hooks/useRegisterProfile";
-import { barangays } from "../constants/barangay";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { selectPersonalInfo } from "../redux/profiles/selectors";
+import { actions } from "../redux/profiles/slice";
+import { Gender, Status } from "../redux/profiles/enums";
 
 export default function PersonalInformation() {
-  const { personalInfo, setPersonalInfo } = useRegisterProfile();
+  const dispatch = useAppDispatch();
+  const personalInfo = useAppSelector(selectPersonalInfo);
 
-  const onSelectDistrict = useCallback(
+  const onSelectChange = useCallback(
     (e: SelectChangeEvent<string>) => {
-      setPersonalInfo((prevProps) => ({
-        ...prevProps,
-        [e.target.name]: e.target.value,
-      }));
+      dispatch(
+        actions.setPersonalInformation({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
     },
-    [setPersonalInfo]
+    [dispatch]
   );
 
-  const onSelectBarangay = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      const districtNum = (barangays as unknown as Barangays)[
-        personalInfo.district
-      ][0].district;
-      setPersonalInfo((prevProps) => ({
-        ...prevProps,
-        districtNumber: districtNum,
-        [e.target.name]: e.target.value,
-      }));
+  const onSelectBdate = useCallback(
+    (value: Date | null) => {
+      const dt = new Date(value!);
+      const year = dt.getUTCFullYear();
+      const month = dt.getUTCMonth() + 1; // Date provides month index; not month number
+      const day = dt.getUTCDate();
+
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 1000) {
+        dispatch(
+          actions.setPersonalInformation({
+            name: "birthdate",
+            value: dt.toISOString() || null,
+          })
+        );
+      }
     },
-    [personalInfo.district, setPersonalInfo]
+    [dispatch]
+  );
+
+  const onChangePersonalText = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      dispatch(
+        actions.setPersonalInformation({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
+    },
+    [dispatch]
   );
 
   return (
@@ -54,12 +75,7 @@ export default function PersonalInformation() {
             label="First name"
             fullWidth
             value={personalInfo.firstName}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
             autoComplete="given-name"
             variant="standard"
           />
@@ -74,12 +90,7 @@ export default function PersonalInformation() {
             autoComplete="family-name"
             variant="standard"
             value={personalInfo.middleName}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -92,25 +103,17 @@ export default function PersonalInformation() {
             autoComplete="family-name"
             variant="standard"
             value={personalInfo.lastName}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <DatePicker
             label="Birthdate"
             name="birthdate"
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                birthdate: e,
-              }));
-            }}
-            value={personalInfo.birthdate}
+            onChange={onSelectBdate}
+            value={
+              personalInfo.birthdate ? new Date(personalInfo.birthdate) : null
+            }
             slotProps={{
               textField: {
                 variant: "standard",
@@ -132,12 +135,7 @@ export default function PersonalInformation() {
               label="Gender"
               defaultValue="M"
               value={personalInfo.gender}
-              onChange={(e) => {
-                setPersonalInfo((prevProps) => ({
-                  ...prevProps,
-                  [e.target.name]: e.target.value,
-                }));
-              }}
+              onChange={onSelectChange}
               variant="standard"
             >
               <MenuItem value={Gender.Male}>Male</MenuItem>
@@ -157,12 +155,7 @@ export default function PersonalInformation() {
               name="status"
               label="Status"
               value={personalInfo.status}
-              onChange={(e) => {
-                setPersonalInfo((prevProps) => ({
-                  ...prevProps,
-                  [e.target.name]: e.target.value,
-                }));
-              }}
+              onChange={onSelectChange}
               variant="standard"
             >
               <MenuItem value={Status.Married}>Married</MenuItem>
@@ -182,23 +175,18 @@ export default function PersonalInformation() {
             autoComplete="personal address"
             variant="standard"
             value={personalInfo.address}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <DistrictSelect
-            onSelect={onSelectDistrict}
+            onSelect={onSelectChange}
             selectedValue={personalInfo.district}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <BarangaySelect
-            onSelect={onSelectBarangay}
+            onSelect={onSelectChange}
             districtValue={personalInfo.district}
             selectedValue={personalInfo.barangay}
           />
@@ -213,12 +201,7 @@ export default function PersonalInformation() {
             autoComplete="personal address-city"
             variant="standard"
             value={personalInfo.city}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -231,12 +214,7 @@ export default function PersonalInformation() {
             autoComplete="personal address-region"
             variant="standard"
             value={personalInfo.region}
-            onChange={(e) => {
-              setPersonalInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onChange={onChangePersonalText}
           />
         </Grid>
       </Grid>

@@ -1,32 +1,61 @@
-import * as React from "react";
+import { useCallback } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { LeadershipLevel } from "../types/information";
 import NetworkHeadsSelect from "../components/NetworkHeadsSelect";
-import { useRegisterProfile } from "../hooks/useRegisterProfile";
+import { LeadershipLevel } from "../redux/profiles/enums";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { selectChurchInfo } from "../redux/profiles/selectors";
+import { actions } from "../redux/profiles/slice";
 
 export default function ChurchInformation() {
-  const { churchInfo, setChurchInfo } = useRegisterProfile();
+  const dispatch = useAppDispatch();
+  const churchInfo = useAppSelector(selectChurchInfo);
+
+  const onSelectChange = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      dispatch(
+        actions.setChurchInformation({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const onSelectDADate = useCallback(
+    (value: Date | null) => {
+      const dt = new Date(value!);
+      const year = dt.getUTCFullYear();
+      const month = dt.getUTCMonth() + 1; // Date provides month index; not month number
+      const day = dt.getUTCDate();
+
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 1000) {
+        dispatch(
+          actions.setChurchInformation({
+            name: "divineAppointmentDate",
+            value: dt.toISOString() || null,
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h6" gutterBottom sx={{ mb: 4 }}>
         Church Information
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <NetworkHeadsSelect
-            onSelect={(e) => {
-              setChurchInfo((prevProps) => ({
-                ...prevProps,
-                [e.target.name]: e.target.value,
-              }));
-            }}
+            onSelect={onSelectChange}
             selectedValue={churchInfo.networkHead}
           />
         </Grid>
@@ -42,12 +71,7 @@ export default function ChurchInformation() {
               name="leadershipLevel"
               label="Leadership Level"
               value={churchInfo.leadershipLevel}
-              onChange={(e) => {
-                setChurchInfo((prevProps) => ({
-                  ...prevProps,
-                  [e.target.name]: e.target.value,
-                }));
-              }}
+              onChange={onSelectChange}
               defaultValue={LeadershipLevel.TwoEightEight}
               variant="standard"
             >
@@ -79,16 +103,15 @@ export default function ChurchInformation() {
                 placeholder: "Divide Appointment Date",
               },
             }}
-            value={churchInfo.divineAppointmentDate}
-            onChange={(e) => {
-              setChurchInfo((prevProps) => ({
-                ...prevProps,
-                divineAppointmentDate: e,
-              }));
-            }}
+            value={
+              churchInfo.divineAppointmentDate
+                ? new Date(churchInfo.divineAppointmentDate)
+                : null
+            }
+            onChange={onSelectDADate}
           />
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   );
 }

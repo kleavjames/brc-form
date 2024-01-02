@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,146 +7,109 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Profile } from "../../types/profile";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {
-  Barangays,
-  Gender,
-  LeadershipLevel,
-  Status,
-} from "../../types/information";
 import DistrictSelect from "../DistrictSelect";
 import BarangaySelect from "../BarangaySelect";
-import { barangays } from "../../constants/barangay";
 import Typography from "@mui/material/Typography";
 import NetworkHeadsSelect from "../NetworkHeadsSelect";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
+import { Gender, LeadershipLevel, Status } from "../../redux/profiles/enums";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectDefaultProfile } from "../../redux/profiles/selectors";
+import { actions } from "../../redux/profiles/slice";
+import Loader from "../Loader";
 
 type EditProfileProps = {
   open: boolean;
   onClose: () => void;
-  profile: Profile;
-  onHandleUpdate: (profile: Profile, id: string) => Promise<void>;
-  onHandleDelete: (id: string) => Promise<void>;
 };
 
-const EditProfileModal: FC<EditProfileProps> = ({
-  open,
-  onClose,
-  profile,
-  onHandleUpdate,
-  onHandleDelete,
-}) => {
-  const [editProfile, setEditProfile] = useState<Profile | null>(null);
+const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
+  const dispatch = useAppDispatch();
+  const profile = useAppSelector(selectDefaultProfile);
+  const loadingProfile = useAppSelector(
+    (state) => state.profiles.loadingProfile
+  );
   const [showDelete, setShowDelete] = useState(false);
-
-  const checkedVoting = useMemo(() => {
-    if (
-      editProfile?.isRegistered === undefined ||
-      editProfile?.isRegistered === null
-    ) {
-      return profile.isRegistered;
-    } else {
-      return editProfile?.isRegistered;
-    }
-  }, [editProfile?.isRegistered, profile.isRegistered]);
-
-  const onHandleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setEditProfile((prevProps) => ({
-        ...prevProps!,
-        [e.target.name]: e.target.value,
-      }));
-    },
-    []
-  );
-
-  const onSelectDistrict = useCallback((e: SelectChangeEvent<string>) => {
-    setEditProfile((prevProps) => ({
-      ...prevProps!,
-      [e.target.name]: e.target.value,
-    }));
-  }, []);
-
-  const onSelectBarangay = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      const districtNum = (barangays as unknown as Barangays)[
-        editProfile?.district as string
-      ][0].district;
-      setEditProfile((prevProps) => ({
-        ...prevProps!,
-        districtNumber: districtNum,
-        [e.target.name]: e.target.value,
-      }));
-    },
-    [editProfile?.district]
-  );
-
-  const onSelectVotingBarangay = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      const districtNum = (barangays as unknown as Barangays)[
-        editProfile?.votingDistrict as string
-      ][0].district;
-      setEditProfile((prevProps) => ({
-        ...prevProps!,
-        votingDistrictNumber: districtNum,
-        [e.target.name]: e.target.value,
-      }));
-    },
-    [editProfile?.votingDistrict]
-  );
 
   const handleVoteChecked = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.checked) {
-        setEditProfile((prevProps) => ({
-          ...prevProps!,
-          votingPrecinctId: null,
-          votingBarangay: null,
-          votingDistrict: null,
-          votingDistrictNumber: null,
-          votingCity: null,
-          votingRegion: null,
-          isRegistered: e.target.checked,
-        }));
-        return;
-      }
-
-      setEditProfile((prevProps) => ({
-        ...prevProps!,
-        [e.target.name]: e.target.checked,
-      }));
+      dispatch(actions.setProfileIsRegisterd(e.target.checked));
     },
-    []
+    [dispatch]
   );
 
   const onHandleClose = useCallback(() => {
+    dispatch(actions.setResetProfileInfo());
     onClose();
-    setEditProfile(null);
     setShowDelete(false);
-  }, [onClose]);
+  }, [dispatch, onClose]);
 
   const updateProfile = useCallback(async () => {
-    await onHandleUpdate(editProfile!, profile._id!);
+    await dispatch(actions.updateProfileThunk()).unwrap();
     onHandleClose();
-  }, [editProfile, onHandleClose, onHandleUpdate, profile._id]);
+  }, [dispatch, onHandleClose]);
 
   const onDelete = () => {
     setShowDelete(true);
   };
 
-  const confirmedDelete = async () => {
-    await onHandleDelete(profile._id!);
+  const confirmedDelete = useCallback(async () => {
+    await dispatch(actions.deleteProfileThunk()).unwrap();
     onHandleClose();
-  };
+  }, [dispatch, onHandleClose]);
+
+  const onChangeText = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      dispatch(
+        actions.setProfileUpdate({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const onSelectChange = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      dispatch(
+        actions.setProfileUpdate({
+          name: e.target.name,
+          value: e.target.value,
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const onSelectDate = useCallback(
+    (value: Date | null, field: "birthdate" | "divineAppointmentDate") => {
+      const dt = new Date(value!);
+      const year = dt.getUTCFullYear();
+      const month = dt.getUTCMonth() + 1; // Date provides month index; not month number
+      const day = dt.getUTCDate();
+
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 1000) {
+        dispatch(
+          actions.setProfileUpdate({
+            name: field,
+            value: dt.toISOString() || null,
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
 
   return (
     <>
+      <Loader loading={loadingProfile} indexIn="modal" />
       <Dialog fullWidth maxWidth="xl" open={open} onClose={onHandleClose}>
         <DialogTitle>Edit Profile</DialogTitle>
         <DialogContent>
@@ -155,25 +118,25 @@ const EditProfileModal: FC<EditProfileProps> = ({
             <Grid item xs={12} sm={4}>
               <TextField
                 margin="dense"
-                value={editProfile?.firstName || profile.firstName}
+                value={profile.firstName}
                 id="firstName"
                 name="firstName"
                 label="First Name"
                 fullWidth
                 variant="standard"
-                onChange={onHandleChange}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
                 margin="dense"
-                value={editProfile?.middleName || profile.middleName}
+                value={profile.middleName}
                 id="middleName"
                 name="middleName"
                 label="Middle Name"
                 fullWidth
                 variant="standard"
-                onChange={onHandleChange}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -181,11 +144,11 @@ const EditProfileModal: FC<EditProfileProps> = ({
                 margin="dense"
                 id="lastName"
                 label="Last Name"
-                value={editProfile?.lastName || profile.lastName}
+                value={profile.lastName}
                 name="lastName"
                 fullWidth
                 variant="standard"
-                onChange={onHandleChange}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -199,13 +162,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                   defaultValue={Status.Married}
                   name="status"
                   label="Status"
-                  value={editProfile?.status || profile.status}
-                  onChange={(e) => {
-                    setEditProfile((prevProps) => ({
-                      ...prevProps!,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
+                  value={profile.status}
+                  onChange={onSelectChange}
                   variant="standard"
                 >
                   <MenuItem value={Status.Married}>Married</MenuItem>
@@ -219,13 +177,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
               <DatePicker
                 label="Birthdate"
                 name="birthdate"
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    birthdate: e,
-                  }));
-                }}
-                value={new Date(editProfile?.birthdate || profile.birthdate!)}
+                onChange={(e) => onSelectDate(e, "birthdate")}
+                value={new Date(profile.birthdate!)}
                 slotProps={{
                   textField: {
                     variant: "standard",
@@ -244,13 +197,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                 fullWidth
                 autoComplete="personal address"
                 variant="standard"
-                value={editProfile?.address || profile.address}
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    [e.target.name]: e.target.value,
-                  }));
-                }}
+                value={profile.address}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
@@ -263,13 +211,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                   id="gender"
                   name="gender"
                   label="Gender"
-                  value={editProfile?.gender || profile.gender}
-                  onChange={(e) => {
-                    setEditProfile((prevProps) => ({
-                      ...prevProps!,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
+                  value={profile.gender}
+                  onChange={onSelectChange}
                   variant="standard"
                 >
                   <MenuItem value={Gender.Male}>Male</MenuItem>
@@ -279,15 +222,15 @@ const EditProfileModal: FC<EditProfileProps> = ({
             </Grid>
             <Grid item xs={12} sm={4}>
               <DistrictSelect
-                onSelect={onSelectDistrict}
-                selectedValue={editProfile?.district || profile.district}
+                onSelect={onSelectChange}
+                selectedValue={profile.district}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <BarangaySelect
-                onSelect={onSelectBarangay}
-                districtValue={editProfile?.district || profile.district}
-                selectedValue={editProfile?.barangay || profile.barangay}
+                onSelect={onSelectChange}
+                districtValue={profile.district}
+                selectedValue={profile.barangay}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -299,8 +242,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                 fullWidth
                 autoComplete="personal address-city"
                 variant="standard"
-                value={editProfile?.city || profile.city}
-                onChange={onHandleChange}
+                value={profile.city}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -312,8 +255,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                 fullWidth
                 autoComplete="personal address-region"
                 variant="standard"
-                value={editProfile?.region || profile.region}
-                onChange={onHandleChange}
+                value={profile.region}
+                onChange={onChangeText}
               />
             </Grid>
           </Grid>
@@ -323,13 +266,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <NetworkHeadsSelect
-                onSelect={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    [e.target.name]: e.target.value,
-                  }));
-                }}
-                selectedValue={editProfile?.networkHead || profile.networkHead}
+                onSelect={onSelectChange}
+                selectedValue={profile.networkHead}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -343,15 +281,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                   id="leadershipLevel"
                   name="leadershipLevel"
                   label="Leadership Level"
-                  value={
-                    editProfile?.leadershipLevel || profile.leadershipLevel
-                  }
-                  onChange={(e) => {
-                    setEditProfile((prevProps) => ({
-                      ...prevProps!,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
+                  value={profile.leadershipLevel}
+                  onChange={onSelectChange}
                   defaultValue={LeadershipLevel.TwoEightEight}
                   variant="standard"
                 >
@@ -387,18 +318,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     placeholder: "Divide Appointment Date",
                   },
                 }}
-                value={
-                  new Date(
-                    editProfile?.divineAppointmentDate ||
-                      profile.divineAppointmentDate!
-                  )
-                }
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    divineAppointmentDate: e,
-                  }));
-                }}
+                value={new Date(profile.divineAppointmentDate!)}
+                onChange={(e) => onSelectDate(e, "divineAppointmentDate")}
               />
             </Grid>
           </Grid>
@@ -413,7 +334,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
                   <Checkbox
                     color="primary"
                     name="isRegistered"
-                    checked={checkedVoting}
+                    checked={profile.isRegistered}
                     inputProps={{ "aria-label": "controlled" }}
                     onChange={handleVoteChecked}
                   />
@@ -423,83 +344,59 @@ const EditProfileModal: FC<EditProfileProps> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                disabled={!checkedVoting}
+                disabled={!profile.isRegistered}
                 id="votingPrecinctId"
                 name="votingPrecinctId"
                 label="Precinct ID"
-                value={
-                  editProfile?.votingPrecinctId || profile.votingPrecinctId
-                }
+                value={profile.votingPrecinctId || ""}
                 fullWidth
                 autoComplete="precinct-id"
                 variant="standard"
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    [e.target.name]: e.target.value,
-                  }));
-                }}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={4} md={5}>
               <DistrictSelect
                 forVoter
-                onSelect={onSelectDistrict}
-                disabled={!checkedVoting}
-                selectedValue={
-                  editProfile?.votingDistrict || profile.votingDistrict!
-                }
+                onSelect={onSelectChange}
+                disabled={!profile.isRegistered}
+                selectedValue={profile.votingDistrict || "poblacion"}
               />
             </Grid>
             <Grid item xs={12} sm={4} md={5}>
               <BarangaySelect
                 forVoter
-                onSelect={onSelectVotingBarangay}
-                disabled={!checkedVoting}
-                districtValue={
-                  (editProfile?.votingDistrict ?? profile.votingDistrict) ||
-                  "poblacion"
-                }
-                selectedValue={
-                  editProfile?.votingBarangay || profile.votingBarangay!
-                }
+                onSelect={onSelectChange}
+                disabled={!profile.isRegistered}
+                districtValue={profile.votingDistrict || "poblacion"}
+                selectedValue={profile.votingBarangay || "1-A"}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 required
-                disabled={!checkedVoting}
+                disabled={!profile.isRegistered}
                 id="votingCity"
                 name="votingCity"
                 label="City/Municipality"
                 fullWidth
-                value={editProfile?.votingCity || profile.votingCity}
+                value={profile.votingCity || ""}
                 autoComplete="personal address-city"
                 variant="standard"
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    [e.target.name]: e.target.value,
-                  }));
-                }}
+                onChange={onChangeText}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 id="votingRegion"
-                disabled={!checkedVoting}
+                disabled={!profile.isRegistered}
                 name="votingRegion"
                 label="Province/Region"
                 fullWidth
-                value={editProfile?.votingRegion || profile.votingRegion}
+                value={profile.votingRegion || ""}
                 autoComplete="personal address-region"
                 variant="standard"
-                onChange={(e) => {
-                  setEditProfile((prevProps) => ({
-                    ...prevProps!,
-                    [e.target.name]: e.target.value,
-                  }));
-                }}
+                onChange={onChangeText}
               />
             </Grid>
           </Grid>
