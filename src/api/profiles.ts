@@ -1,40 +1,26 @@
-import { errorHandler, instance } from "../config/axiosInstance";
-import { Profile } from "../types/profile";
+import { instance } from "../config/axiosInstance";
+import { Profiles } from "../redux/profiles/types";
 
 export const getProfiles = async () => {
-  try {
-    const response = await instance.get("/profiles");
-    return response.data;
-  } catch (error) {
-    throw errorHandler(error);
-  }
+  const response = await instance.get("/profiles");
+  return response;
 };
 
-export const addProfile = async (profile: Profile) => {
-  try {
-    const response = await instance.post("/profiles/create", {
-      ...profile,
-    });
-    return response.data;
-  } catch (error) {
-    throw errorHandler(error);
-  }
+export const addProfile = async (profile: Profiles) => {
+  const response = await instance.post("/profiles/create", {
+    ...profile,
+  });
+  return response;
 };
 
-export const updateProfile = async (profile: Profile, id: string) => {
-  try {
-    await instance.patch(`/profiles/${id}`, {
-      ...profile,
-    });
-  } catch (error) {
-    throw errorHandler(error);
-  }
+export const updateProfile = async (profile: Profiles) => {
+  const response = await instance.patch(`/profiles/${profile._id}`, {
+    ...profile,
+  });
+  return response;
 };
 
 export const deleteProfile = async (id: string) => {
-  try {
-    await instance.delete(`/profiles/${id}`);
-  } catch (error) {
-    throw errorHandler(error);
-  }
+  const response = await instance.delete(`/profiles/${id}`);
+  return response;
 };

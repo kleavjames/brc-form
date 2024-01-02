@@ -5,7 +5,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { barangays } from "../constants/barangay";
-import { Barangays } from "../types/information";
+import { Barangays } from "../redux/profiles/types";
 
 type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;

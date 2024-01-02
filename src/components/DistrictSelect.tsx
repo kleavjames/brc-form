@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ListSubHeader from "@mui/material/ListSubheader";
 import { districts } from "../constants/district";
-import { Districts } from "../types/information";
+import { Districts } from "../redux/profiles/types";
 
 type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;

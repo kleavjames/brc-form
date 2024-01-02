@@ -10,19 +10,22 @@ import {
 } from "@mui/x-data-grid";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { useProfile } from "../hooks/useProfile";
-import { Gender, LeadershipLevel, Status } from "../types/information";
 import format from "date-fns/format";
 import { Typography } from "@mui/material";
 import EditProfileModal from "../components/modals/EditProfileModal";
-import { Profile } from "../types/profile";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { selectProfiles } from "../redux/profiles/selectors";
+import { Gender, LeadershipLevel, Status } from "../redux/profiles/enums";
+import { actions } from "../redux/profiles/slice";
 
 const Profiles = () => {
-  const { profile, initialProfile, onHandleUpdate, onHandleDelete } =
-    useProfile();
+  const dispatch = useAppDispatch();
+  const profiles = useAppSelector(selectProfiles);
+  const loadingProfileTable = useAppSelector(
+    (state) => state.profiles.loadingProfileTable
+  );
 
   const [openEdit, setOpenEdit] = useState(false);
-  const [updateProfile, setUpdateProfile] = useState<Profile>(initialProfile);
 
   const columns: GridColDef[] = [
     {
@@ -215,24 +218,22 @@ const Profiles = () => {
     },
   ];
 
-  const handleRowClick: GridEventListener<"rowDoubleClick"> = (params) => {
-    setUpdateProfile(params.row);
-    setOpenEdit(true);
-  };
+  const handleRowClick: GridEventListener<"rowDoubleClick"> = useCallback(
+    (params) => {
+      dispatch(actions.setSelectedProfile(params.row._id));
+      setOpenEdit(true);
+    },
+    [dispatch]
+  );
 
   const onCloseModal = useCallback(() => {
+    dispatch(actions.setSelectedProfile(null));
     setOpenEdit(false);
-  }, []);
+  }, [dispatch]);
 
   return (
     <Fragment>
-      <EditProfileModal
-        profile={updateProfile}
-        open={openEdit}
-        onClose={onCloseModal}
-        onHandleUpdate={onHandleUpdate}
-        onHandleDelete={onHandleDelete}
-      />
+      <EditProfileModal open={openEdit} onClose={onCloseModal} />
       <Grid container>
         <Grid item xs={12}>
           <Paper elevation={0} sx={{ mx: 3, mt: 3, p: { xs: 2, md: 3 } }}>
@@ -255,7 +256,8 @@ const Profiles = () => {
               }}
               getRowId={(row) => row._id}
               columns={columns}
-              rows={profile}
+              rows={profiles}
+              loading={loadingProfileTable}
               disableDensitySelector
               initialState={{
                 pagination: { paginationModel: { pageSize: 10 } },
