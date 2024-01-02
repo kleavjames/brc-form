@@ -6,13 +6,20 @@ import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { useRegisterProfile } from "../hooks/useRegisterProfile";
 import format from "date-fns/format";
-import { Gender } from "../types/information";
 import { districts } from "../constants/district";
+import { Gender } from "../redux/profiles/enums";
+import { useAppSelector } from "../redux/store";
+import {
+  selectChurchInfo,
+  selectPersonalInfo,
+  selectVotersInfo,
+} from "../redux/profiles/selectors";
 
 export default function ReviewInformation() {
-  const { personalInfo, churchInfo, votersInfo } = useRegisterProfile();
+  const personalInfo = useAppSelector(selectPersonalInfo);
+  const churchInfo = useAppSelector(selectChurchInfo);
+  const votersInfo = useAppSelector(selectVotersInfo);
 
   const votersDistrict = React.useMemo(() => {
     let districtName = "";
@@ -73,7 +80,7 @@ export default function ReviewInformation() {
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
                 color="primary"
               >
-                {format(personalInfo.birthdate!, "MMMM dd, yyyy")}
+                {format(new Date(personalInfo.birthdate!), "MMMM dd, yyyy")}
               </Typography>
             </ListItem>
             <ListItem>
@@ -171,7 +178,10 @@ export default function ReviewInformation() {
                 sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
                 color="primary"
               >
-                {format(churchInfo.divineAppointmentDate!, "MMMM, yyyy")}
+                {format(
+                  new Date(churchInfo.divineAppointmentDate!),
+                  "MMMM yyyy"
+                )}
               </Typography>
             </ListItem>
           </List>

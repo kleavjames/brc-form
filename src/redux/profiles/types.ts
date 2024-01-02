@@ -1,12 +1,15 @@
-export type Districts = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Gender, Status } from "./enums";
+
+export interface Districts {
   name: string;
   subdistrict: {
     key: string;
     value: string;
   }[];
-};
+}
 
-export type PersonalInformation = {
+export interface PersonalInformation {
   firstName: string;
   lastName: string;
   middleName: string;
@@ -19,15 +22,19 @@ export type PersonalInformation = {
   barangay: string;
   city: string;
   region: string;
+}
+
+export type ObjectKeyValue = {
+  [name: string]: any;
 };
 
-export type ChurchInformation = {
+export interface ChurchInformation {
   networkHead: string;
   leadershipLevel: string;
   divineAppointmentDate: Date | null | undefined;
-};
+}
 
-export type VotersInformation = {
+export interface VotersInformation {
   isRegistered: boolean;
   votingPrecinctId: string | null;
   votingDistrict: string | null;
@@ -35,9 +42,9 @@ export type VotersInformation = {
   votingBarangay: string | null;
   votingCity: string | null;
   votingRegion: string | null;
-};
+}
 
-export type Barangays = {
+export interface Barangays {
   [name: string]: [
     {
       key: string;
@@ -45,27 +52,21 @@ export type Barangays = {
       district: number;
     }
   ];
-};
-
-export enum Gender {
-  Male = "M",
-  Female = "F",
 }
 
-export enum Status {
-  Married = "married",
-  Single = "single",
-  Divorced = "divorced",
-  Widowed = "widowed",
+export interface ProfileState {
+  loadingProfileTable: boolean;
+  loadingProfile: boolean;
+  profiles: Profiles[];
+  defaultProfile: Profiles;
+  personalInfo: PersonalInformation;
+  churchInfo: ChurchInformation;
+  votersInfo: VotersInformation;
 }
 
-export enum LeadershipLevel {
-  SeniorPastor = "seniorpastor",
-  NetworkHead = "networkhead",
-  TwoEightEight = "288",
-  ThreeFourFiveSix = "3456",
-  TwentyK = "20K",
-  Multitudes = "multitudes",
-  NetworkChurch = "networkchurch",
-  Visitors = "visitors",
+export interface Profiles
+  extends PersonalInformation,
+    ChurchInformation,
+    VotersInformation {
+  _id?: string;
 }
