@@ -70,3 +70,19 @@ export interface Profiles
     VotersInformation {
   _id?: string;
 }
+
+export interface DistrictBarangayMap {
+  [name: string]: {
+    total: number;
+    registered: number;
+    nonRegistered: number;
+  };
+}
+
+export interface DistrictBarangays {
+  _id: string;
+  name: string;
+  total: number;
+  registered: number;
+  nonRegistered: number;
+}
