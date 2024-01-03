@@ -157,22 +157,41 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
       <Divider />
       <List component="nav" disablePadding>
         <ListItemButton
-          onClick={() => {
-            navigate("/");
-            toggleDrawer();
-          }}
+          onClick={() => navigate("/")}
           selected={location.pathname === "/"}
         >
           <ListItemIcon>
-            <ContactPageIcon
+            <DashboardIcon
               color={location.pathname === "/" ? "primary" : "action"}
+            />
+          </ListItemIcon>
+          <ListItemText
+            primary="Dashboard"
+            sx={{
+              color: ({ palette }) =>
+                location.pathname === "/"
+                  ? palette.primary.main
+                  : theme.palette.action.activatedOpacity,
+            }}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            navigate("/profiles");
+            toggleDrawer();
+          }}
+          selected={location.pathname === "/profiles"}
+        >
+          <ListItemIcon>
+            <ContactPageIcon
+              color={location.pathname === "/profiles" ? "primary" : "action"}
             />
           </ListItemIcon>
           <ListItemText
             primary="Profiles"
             sx={{
               color: ({ palette }) =>
-                location.pathname === "/"
+                location.pathname === "/profiles"
                   ? palette.primary.main
                   : theme.palette.action.activatedOpacity,
             }}
