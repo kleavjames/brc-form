@@ -16,6 +16,7 @@ export interface PersonalInformation {
   birthdate: Date | null | undefined;
   gender: Gender;
   status: Status;
+  outsideDvo: boolean;
   address: string;
   district: string;
   districtNumber: number;
@@ -28,6 +29,8 @@ export type ObjectKeyValue = {
   [name: string]: any;
 };
 
+export type VoterCheckType = "forVoter" | "outSideVoter" | "sameDetails";
+
 export interface ChurchInformation {
   networkHead: string;
   leadershipLevel: string;
@@ -36,6 +39,8 @@ export interface ChurchInformation {
 
 export interface VotersInformation {
   isRegistered: boolean;
+  votingOutsideDvo: boolean;
+  sameAddress: boolean;
   votingPrecinctId: string | null;
   votingDistrict: string | null;
   votingDistrictNumber: number | null;

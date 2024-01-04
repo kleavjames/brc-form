@@ -34,11 +34,11 @@ const Dashboard = () => {
         </Grid>
       </Box>
       <Box sx={{ m: 3 }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexGrow: 1 }}>
           <Grid item xs={12} md={3}>
             <Paper elevation={0} sx={{ p: 2 }}>
-              <Typography variant="h6" fontWeight="500">
-                Total BRC Profiles
+              <Typography variant="h6" fontWeight="600">
+                BRC Profiles
               </Typography>
               <Typography color="secondary" variant="h2" fontWeight="700">
                 {total.totalProfiles}
@@ -48,41 +48,61 @@ const Dashboard = () => {
           <Grid item xs={12} md={3}>
             <Paper elevation={0} sx={{ p: 2 }}>
               <Typography variant="h6" fontWeight="500">
-                Total Registered Voters
+                Registered Voters (Davao)
               </Typography>
               <Typography color="primary" variant="h2" fontWeight="700">
-                {total.totalRegistered}&nbsp;
+                {total.totalRegistered}
               </Typography>
             </Paper>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <Paper elevation={0} sx={{ p: 2 }}>
-              <Grid container>
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6" fontWeight="500">
-                    District I
-                  </Typography>
-                  <Typography color="primary" variant="h2" fontWeight="700">
-                    {total.totalDistrict1}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6" fontWeight="500">
-                    District II
-                  </Typography>
-                  <Typography color="primary" variant="h2" fontWeight="700">
-                    {total.totalDistrict2}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6" fontWeight="500">
-                    District III
-                  </Typography>
-                  <Typography color="primary" variant="h2" fontWeight="700">
-                    {total.totalDistrict3}
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Typography variant="h6" fontWeight="500">
+                Registered Voters (Outside Davao)
+              </Typography>
+              <Typography color="primary" variant="h2" fontWeight="700">
+                {total.totalRegisteredOutside}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Paper elevation={0} sx={{ p: 2 }}>
+              <Typography variant="h6" fontWeight="500">
+                Not Registered Voter
+              </Typography>
+              <Typography color="GrayText" variant="h2" fontWeight="700">
+                {total.totalNonRegistered}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ p: 2 }}>
+              <Typography variant="h6" fontWeight="500">
+                District I
+              </Typography>
+              <Typography color="primary" variant="h2" fontWeight="700">
+                {total.totalDistrict1}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ p: 2 }}>
+              <Typography variant="h6" fontWeight="500">
+                District II
+              </Typography>
+              <Typography color="primary" variant="h2" fontWeight="700">
+                {total.totalDistrict2}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ p: 2 }}>
+              <Typography variant="h6" fontWeight="500">
+                District III
+              </Typography>
+              <Typography color="primary" variant="h2" fontWeight="700">
+                {total.totalDistrict3}
+              </Typography>
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -94,7 +114,12 @@ const Dashboard = () => {
                 xAxis={[
                   {
                     scaleType: "band",
-                    data: ["District I", "District II", "District III"],
+                    data: [
+                      "District I",
+                      "District II",
+                      "District III",
+                      "Outside Davao",
+                    ],
                   },
                 ]}
                 series={[
@@ -103,6 +128,7 @@ const Dashboard = () => {
                       total.totalDistrict1,
                       total.totalDistrict2,
                       total.totalDistrict3,
+                      total.totalOutside,
                     ],
                     type: "bar",
                     label: "Registered Voters",
@@ -114,6 +140,7 @@ const Dashboard = () => {
                       total.nonTotalDistrict1,
                       total.nonTotalDistrict2,
                       total.nonTotalDistrict3,
+                      total.nonTotalOutside,
                     ],
                     type: "bar",
                     label: "Non Registered",
@@ -158,6 +185,12 @@ const Dashboard = () => {
                         id: 2,
                         value: total.totalDistrict3,
                         label: "District III",
+                        color: "#0037a8",
+                      },
+                      {
+                        id: 3,
+                        value: total.totalOutside,
+                        label: "Outside Davao",
                         color: "#464646",
                       },
                     ],

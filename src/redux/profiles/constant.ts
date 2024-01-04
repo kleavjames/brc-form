@@ -9,6 +9,7 @@ import {
 export const initialProfile: Profiles = {
   _id: "",
   firstName: "",
+  outsideDvo: false,
   lastName: "",
   middleName: "",
   birthdate: null,
@@ -24,6 +25,8 @@ export const initialProfile: Profiles = {
   leadershipLevel: LeadershipLevel.TwoEightEight,
   divineAppointmentDate: null,
   isRegistered: false,
+  votingOutsideDvo: false,
+  sameAddress: false,
   votingPrecinctId: null,
   votingBarangay: null,
   votingCity: null,
@@ -35,6 +38,7 @@ export const initialProfile: Profiles = {
 export const initialPersonalInfo: PersonalInformation = {
   firstName: "",
   lastName: "",
+  outsideDvo: false,
   middleName: "",
   birthdate: null,
   gender: Gender.Male,
@@ -55,6 +59,8 @@ export const initialChurchInfo: ChurchInformation = {
 
 export const initialVotersInfo: VotersInformation = {
   isRegistered: false,
+  votingOutsideDvo: false,
+  sameAddress: false,
   votingPrecinctId: null,
   votingBarangay: null,
   votingCity: null,

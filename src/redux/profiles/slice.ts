@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Barangays, ObjectKeyValue, ProfileState } from "./types";
+import {
+  Barangays,
+  ObjectKeyValue,
+  ProfileState,
+  VoterCheckType,
+} from "./types";
 import * as thunks from "./thunks";
 import {
   initialChurchInfo,
@@ -36,10 +41,14 @@ const slice = createSlice({
     ) => {
       (state.personalInfo as ObjectKeyValue)[payload.name] = payload.value;
       if (state.personalInfo.district) {
-        const districtNum = (barangays as unknown as Barangays)[
-          state.personalInfo.district
-        ][0].district;
-        state.personalInfo.districtNumber = districtNum;
+        if (state.personalInfo.district === "outside") {
+          state.personalInfo.districtNumber = 0;
+        } else {
+          const districtNum = (barangays as unknown as Barangays)[
+            state.personalInfo.district
+          ][0].district;
+          state.personalInfo.districtNumber = districtNum;
+        }
       }
     },
     setChurchInformation: (
@@ -52,6 +61,10 @@ const slice = createSlice({
       }>
     ) => {
       (state.churchInfo as ObjectKeyValue)[payload.name] = payload.value;
+      if (state.churchInfo.leadershipLevel === LeadershipLevel.Visitors) {
+        state.churchInfo.divineAppointmentDate = null;
+        state.churchInfo.networkHead = "";
+      }
     },
     setVotersInformation: (
       state,
@@ -64,22 +77,101 @@ const slice = createSlice({
     ) => {
       (state.votersInfo as ObjectKeyValue)[payload.name] = payload.value;
       if (state.votersInfo.votingDistrict) {
-        const districtNum = (barangays as unknown as Barangays)[
-          state.votersInfo.votingDistrict
-        ][0].district;
-        state.votersInfo.votingDistrictNumber = districtNum;
+        if (state.votersInfo.votingDistrict === "outside") {
+          state.votersInfo.votingDistrictNumber = 0;
+        } else {
+          const districtNum = (barangays as unknown as Barangays)[
+            state.votersInfo.votingDistrict
+          ][0].district;
+          state.votersInfo.votingDistrictNumber = districtNum;
+        }
       }
     },
-    setVoterInfoIsRegistered: (state, { payload }: PayloadAction<boolean>) => {
-      if (!payload) {
-        state.votersInfo.votingBarangay = null;
-        state.votersInfo.votingPrecinctId = null;
-        state.votersInfo.votingDistrict = null;
-        state.votersInfo.votingDistrictNumber = null;
-        state.votersInfo.votingCity = null;
-        state.votersInfo.votingRegion = null;
+    setAddressOutsideDavao: (state, { payload }: PayloadAction<boolean>) => {
+      if (payload) {
+        state.personalInfo.district = "outside";
+        state.personalInfo.barangay = "";
+      } else {
+        state.personalInfo.district = "poblacion";
+        state.personalInfo.barangay = "1-A";
       }
-      state.votersInfo.isRegistered = payload;
+      state.personalInfo.outsideDvo = payload;
+    },
+    setVoterInfoChecked: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        checked: boolean;
+        type: VoterCheckType;
+      }>
+    ) => {
+      // run logic for isRegistered checkbox
+      if (payload.type === "forVoter") {
+        // if isRegistered is unchecked, set values to null
+        if (!payload.checked) {
+          state.votersInfo.votingBarangay = null;
+          state.votersInfo.votingPrecinctId = null;
+          state.votersInfo.votingDistrict = null;
+          state.votersInfo.votingDistrictNumber = null;
+          state.votersInfo.votingCity = null;
+          state.votersInfo.votingRegion = null;
+        }
+        // check only one checkbox isRegistered or votingOutsideDvo
+        if (state.votersInfo.votingOutsideDvo) {
+          state.votersInfo.votingOutsideDvo = !payload.checked;
+          // if sameAddress is checked, mark to false
+          if (state.votersInfo.sameAddress) {
+            state.votersInfo.sameAddress = false;
+          }
+        }
+        // uncheck same address if isRegistered is unchecked
+        if (state.votersInfo.sameAddress && !payload.checked) {
+          state.votersInfo.sameAddress = false;
+        }
+        state.votersInfo.isRegistered = payload.checked;
+        // run logic for votingOutsideDvo checkbox
+      } else if (payload.type === "outSideVoter") {
+        state.votersInfo.votingBarangay = null;
+        // if votingOutsideDvo is checked set district to outside and number to 0
+        state.votersInfo.votingDistrict = payload.checked ? "outside" : null;
+        state.votersInfo.votingDistrictNumber = payload.checked ? 0 : null;
+        state.votersInfo.votingOutsideDvo = payload.checked;
+        // check only one checkbox isRegistered or votingOutsideDvo
+        if (state.votersInfo.isRegistered) {
+          state.votersInfo.isRegistered = !payload.checked;
+          // if sameAddress is checked, mark to false
+          if (state.votersInfo.sameAddress) {
+            state.votersInfo.sameAddress = false;
+          }
+        }
+        // uncheck same address if votingOutsideDvo is unchecked
+        if (state.votersInfo.sameAddress && !payload.checked) {
+          state.votersInfo.sameAddress = false;
+        }
+        // run logic for sameAddress checkbox
+      } else if (payload.type === "sameDetails") {
+        // make voting address same with personal info address
+        // if unchecked set to null and add input manually
+        state.votersInfo.votingBarangay = payload.checked
+          ? state.personalInfo.barangay
+          : null;
+        state.votersInfo.votingDistrict = payload.checked
+          ? state.votersInfo.votingOutsideDvo
+            ? "outside"
+            : state.personalInfo.district
+          : null;
+        state.votersInfo.votingDistrictNumber = payload.checked
+          ? state.personalInfo.districtNumber
+          : null;
+        state.votersInfo.votingCity = payload.checked
+          ? state.personalInfo.city
+          : null;
+        state.votersInfo.votingRegion = payload.checked
+          ? state.personalInfo.region
+          : null;
+        state.votersInfo.sameAddress = payload.checked;
+      }
     },
     setProfileIsRegisterd: (state, { payload }: PayloadAction<boolean>) => {
       state.defaultProfile.isRegistered = payload;
@@ -109,10 +201,14 @@ const slice = createSlice({
     ) => {
       (state.defaultProfile as ObjectKeyValue)[payload.name] = payload.value;
       if (state.defaultProfile.district) {
-        const districtNum = (barangays as unknown as Barangays)[
-          state.defaultProfile.district
-        ][0].district;
-        state.defaultProfile.districtNumber = districtNum;
+        if (state.defaultProfile.district === "outside") {
+          state.defaultProfile.districtNumber = 0;
+        } else {
+          const districtNum = (barangays as unknown as Barangays)[
+            state.defaultProfile.district
+          ][0].district;
+          state.defaultProfile.districtNumber = districtNum;
+        }
       }
       if (state.defaultProfile.votingDistrict) {
         const districtNum = (barangays as unknown as Barangays)[

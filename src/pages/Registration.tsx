@@ -56,6 +56,7 @@ export default function Registration() {
   const handleNext = async () => {
     if (activeStep === steps.length - 1) {
       await dispatch(actions.submitProfileThunk()).unwrap();
+      dispatch(actions.setResetProfileInfo());
     }
     setActiveStep(activeStep + 1);
   };
