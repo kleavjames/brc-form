@@ -173,8 +173,74 @@ const slice = createSlice({
         state.votersInfo.sameAddress = payload.checked;
       }
     },
-    setProfileIsRegisterd: (state, { payload }: PayloadAction<boolean>) => {
-      state.defaultProfile.isRegistered = payload;
+    setUpdateProfileCheck: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        checked: boolean;
+        type: VoterCheckType;
+      }>
+    ) => {
+      if (payload.type === "forVoter") {
+        // if check is triggered, set all to null
+        state.defaultProfile.votingPrecinctId = null;
+        state.defaultProfile.votingDistrict = null;
+        state.defaultProfile.votingBarangay = null;
+        state.defaultProfile.votingCity = null;
+        state.defaultProfile.votingRegion = null;
+        state.defaultProfile.votingDistrictNumber = null;
+        state.defaultProfile.sameAddress = false;
+        if (state.defaultProfile.votingOutsideDvo) {
+          state.defaultProfile.votingOutsideDvo = false;
+        }
+        state.defaultProfile.isRegistered = payload.checked;
+      } else if (payload.type === "currOutside") {
+        // set to right values if voter outside davao is triggered
+        state.defaultProfile.address = "";
+        state.defaultProfile.district = "outside";
+        state.defaultProfile.barangay = "";
+        state.defaultProfile.districtNumber = 0;
+        state.defaultProfile.city = "";
+        state.defaultProfile.region = "";
+        state.defaultProfile.outsideDvo = payload.checked;
+      } else if (payload.type === "outSideVoter") {
+        state.defaultProfile.votingDistrict = payload.checked
+          ? "outside"
+          : null;
+        state.defaultProfile.votingPrecinctId = null;
+        state.defaultProfile.votingBarangay = null;
+        state.defaultProfile.votingCity = null;
+        state.defaultProfile.votingRegion = null;
+        state.defaultProfile.votingDistrictNumber = payload.checked ? 0 : null;
+        state.defaultProfile.sameAddress = false;
+        if (state.defaultProfile.isRegistered) {
+          state.defaultProfile.isRegistered = false;
+        }
+        state.defaultProfile.votingOutsideDvo = payload.checked;
+      } else {
+        if (payload.checked) {
+          state.defaultProfile.votingBarangay = state.defaultProfile.barangay;
+          state.defaultProfile.votingDistrict = state.defaultProfile.district;
+          state.defaultProfile.votingDistrictNumber =
+            state.defaultProfile.districtNumber;
+          state.defaultProfile.votingCity = state.defaultProfile.city;
+          state.defaultProfile.votingRegion = state.defaultProfile.region;
+        } else {
+          state.defaultProfile.votingBarangay = null;
+          state.defaultProfile.votingDistrict = state.defaultProfile
+            .votingOutsideDvo
+            ? "outside"
+            : null;
+          state.defaultProfile.votingDistrictNumber = state.defaultProfile
+            .votingOutsideDvo
+            ? 0
+            : null;
+          state.defaultProfile.votingCity = null;
+          state.defaultProfile.votingRegion = null;
+        }
+        state.defaultProfile.sameAddress = payload.checked;
+      }
     },
     setResetProfileInfo: (state) => {
       state.personalInfo = initialPersonalInfo;
@@ -211,10 +277,14 @@ const slice = createSlice({
         }
       }
       if (state.defaultProfile.votingDistrict) {
-        const districtNum = (barangays as unknown as Barangays)[
-          state.defaultProfile.votingDistrict
-        ][0].district;
-        state.defaultProfile.votingDistrictNumber = districtNum;
+        if (state.defaultProfile.votingDistrict === "outside") {
+          state.defaultProfile.votingDistrictNumber = 0;
+        } else {
+          const districtNum = (barangays as unknown as Barangays)[
+            state.defaultProfile.votingDistrict
+          ][0].district;
+          state.defaultProfile.votingDistrictNumber = districtNum;
+        }
       }
     },
   },

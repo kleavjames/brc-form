@@ -29,7 +29,11 @@ export type ObjectKeyValue = {
   [name: string]: any;
 };
 
-export type VoterCheckType = "forVoter" | "outSideVoter" | "sameDetails";
+export type VoterCheckType =
+  | "forVoter"
+  | "outSideVoter"
+  | "sameDetails"
+  | "currOutside";
 
 export interface ChurchInformation {
   networkHead: string;

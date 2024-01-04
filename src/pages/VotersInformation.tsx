@@ -156,7 +156,9 @@ export default function VotersInformation() {
             outsideDavao={votersInfo.votingOutsideDvo}
             disabled={!votersInfo.isRegistered && !votersInfo.votingOutsideDvo}
             selectedValue={
-              votersInfo.votingDistrict ? votersInfo.votingDistrict : ""
+              votersInfo.votingDistrict
+                ? votersInfo.votingDistrict
+                : "poblacion"
             }
           />
         </Grid>
@@ -167,7 +169,7 @@ export default function VotersInformation() {
             disabled={!votersInfo.isRegistered && !votersInfo.votingOutsideDvo}
             districtValue={votersInfo.votingDistrict || "poblacion"}
             selectedValue={
-              votersInfo.votingBarangay ? votersInfo.votingBarangay : ""
+              votersInfo.votingBarangay ? votersInfo.votingBarangay : "1-A"
             }
           />
         </Grid>
