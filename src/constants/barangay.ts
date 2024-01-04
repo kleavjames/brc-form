@@ -169,6 +169,7 @@ export const barangays = {
     { key: "bayabas", value: "Bayabas", district: 3 },
     { key: "binugao", value: "Binugao", district: 3 },
     { key: "calamansi", value: "Calamansi", district: 3 },
+    { key: "mulig", value: "Mulig", district: 3 },
     { key: "catigan", value: "Catigan", district: 3 },
     { key: "crossing-bayabas", value: "Crossing Bayabas", district: 3 },
     { key: "lubogan", value: "Lubogan", district: 3 },
@@ -188,7 +189,11 @@ export const barangays = {
     { key: "biao-escuela", value: "Biao Escuela", district: 3 },
     { key: "biao-guinga", value: "Biao Guinga", district: 3 },
     { key: "daliao-tugbok", value: "Daliao", district: 3 },
-    { key: "daliao-plantation-tugbok", value: "Daliaoan Plantation", district: 3 },
+    {
+      key: "daliao-plantation-tugbok",
+      value: "Daliaoan Plantation",
+      district: 3,
+    },
     { key: "eden-tugbok", value: "Eden", district: 3 },
     { key: "kilate-tugbok", value: "Kilate", district: 3 },
     { key: "lizada-tugbok", value: "Lizada", district: 3 },
@@ -205,5 +210,5 @@ export const barangays = {
     { key: "talandang", value: "Talandang", district: 3 },
     { key: "tugbok-proper", value: "Tugbok Proper", district: 3 },
     { key: "ula", value: "Ula", district: 3 },
-  ]
+  ],
 };

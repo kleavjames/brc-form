@@ -56,6 +56,7 @@ export default function ChurchInformation() {
         <Grid item xs={12} sm={6}>
           <NetworkHeadsSelect
             onSelect={onSelectChange}
+            disabled={churchInfo.leadershipLevel === LeadershipLevel.Visitors}
             selectedValue={churchInfo.networkHead}
           />
         </Grid>
@@ -95,6 +96,7 @@ export default function ChurchInformation() {
           <DatePicker
             label="Divine Appointment Date"
             views={["month", "year"]}
+            disabled={churchInfo.leadershipLevel === LeadershipLevel.Visitors}
             name="divineAppointmentDate"
             slotProps={{
               textField: {

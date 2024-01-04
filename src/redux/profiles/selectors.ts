@@ -30,7 +30,7 @@ export const selectVotersInfo = createSelector(
   (state) => state.votersInfo
 );
 
-export const selectValidProfileInfo = createSelector(
+export const selectValidPersonalInfo = createSelector(
   profilesSelector,
   (profile) => {
     const {
@@ -64,6 +64,10 @@ export const selectValidChurchInfo = createSelector(
     const { leadershipLevel, divineAppointmentDate, networkHead } =
       profile.churchInfo;
 
+    if (leadershipLevel === LeadershipLevel.Visitors) {
+      return true;
+    }
+
     if (
       (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
       !divineAppointmentDate
@@ -79,18 +83,62 @@ export const selectValidVotersInfo = createSelector(
   (profile) => {
     const {
       isRegistered,
+      votingOutsideDvo,
       votingBarangay,
       votingCity,
       votingDistrict,
       votingRegion,
     } = profile.votersInfo;
 
-    if (!isRegistered) {
+    if (
+      (!isRegistered && !votingOutsideDvo) ||
+      (isRegistered &&
+        votingDistrict &&
+        votingBarangay &&
+        votingCity &&
+        votingRegion) ||
+      (votingOutsideDvo && votingCity && votingRegion)
+    ) {
       return true;
     }
-    if (!votingDistrict || !votingBarangay || !votingCity || !votingRegion) {
+
+    return false;
+  }
+);
+
+export const selectValidProfile = createSelector(
+  profilesSelector,
+  (profile) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+      birthdate,
+      address,
+      city,
+      region,
+      leadershipLevel,
+      networkHead,
+      divineAppointmentDate,
+    } = profile.defaultProfile;
+
+    // disable update
+    if (
+      !firstName ||
+      !lastName ||
+      !middleName ||
+      !birthdate ||
+      !address ||
+      !city ||
+      !region ||
+      (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
+      !divineAppointmentDate
+    ) {
       return false;
+    } else if (leadershipLevel === LeadershipLevel.Visitors) {
+      return true;
     }
+
     return true;
   }
 );
@@ -98,6 +146,7 @@ export const selectValidVotersInfo = createSelector(
 export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
   let profileCount = 0;
   const profileRegistered = [];
+  const profileRegisteredOutside = [];
   const nonRegisteredProfiles = [];
   // by districts registered / non registered
   let totalDistrict1 = 0;
@@ -106,10 +155,13 @@ export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
   let nonTotalDistrict1 = 0;
   let nonTotalDistrict2 = 0;
   let nonTotalDistrict3 = 0;
+  let nonTotalOutside = 0;
 
   for (const profile of state.profiles) {
     if (profile.isRegistered) {
       profileRegistered.push(profile);
+    } else if (profile.votingOutsideDvo) {
+      profileRegisteredOutside.push(profile);
     } else {
       nonRegisteredProfiles.push(profile);
     }
@@ -117,6 +169,7 @@ export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
     profileCount += 1;
   }
 
+  // total of voters per davao district
   for (const profReg of profileRegistered) {
     if (profReg.votingDistrictNumber === 1) {
       totalDistrict1 += 1;
@@ -127,6 +180,7 @@ export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
     }
   }
 
+  // total non voters
   for (const nonProf of nonRegisteredProfiles) {
     if (nonProf.districtNumber === 1) {
       nonTotalDistrict1 += 1;
@@ -134,18 +188,24 @@ export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
       nonTotalDistrict2 += 1;
     } else if (nonProf.districtNumber === 3) {
       nonTotalDistrict3 += 1;
+    } else {
+      nonTotalOutside += 1;
     }
   }
 
   return {
     totalProfiles: profileCount,
     totalRegistered: profileRegistered.length,
+    totalRegisteredOutside: profileRegisteredOutside.length,
+    totalNonRegistered: nonRegisteredProfiles.length,
     totalDistrict1,
     totalDistrict2,
     totalDistrict3,
+    totalOutside: profileRegisteredOutside.length,
     nonTotalDistrict1,
     nonTotalDistrict2,
     nonTotalDistrict3,
+    nonTotalOutside,
   };
 });
 

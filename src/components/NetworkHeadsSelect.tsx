@@ -8,9 +8,14 @@ import { networkHeads } from "../constants/networks";
 type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;
   selectedValue: string;
+  disabled?: boolean;
 };
 
-const NetworkHeadsSelect: FC<Props> = ({ onSelect, selectedValue }) => {
+const NetworkHeadsSelect: FC<Props> = ({
+  onSelect,
+  selectedValue,
+  disabled = false,
+}) => {
   const renderNetworkHeads = useCallback(() => {
     return networkHeads.map((heads) => (
       <MenuItem key={heads.name} value={heads.name}>
@@ -21,7 +26,7 @@ const NetworkHeadsSelect: FC<Props> = ({ onSelect, selectedValue }) => {
 
   return (
     <>
-      <FormControl fullWidth>
+      <FormControl fullWidth disabled={disabled}>
         <InputLabel sx={{ ml: -2 }} id="networkHead-select-label">
           Network Head
         </InputLabel>

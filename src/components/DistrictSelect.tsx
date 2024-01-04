@@ -12,6 +12,7 @@ type Props = {
   selectedValue: string;
   disabled?: boolean;
   forVoter?: boolean;
+  outsideDavao?: boolean;
 };
 
 const DistrictSelect: FC<Props> = ({
@@ -19,6 +20,7 @@ const DistrictSelect: FC<Props> = ({
   selectedValue,
   disabled = false,
   forVoter = false,
+  outsideDavao = false,
 }) => {
   const renderDistricts = useCallback((district: Districts) => {
     const subdistricts = district.subdistrict.map((sub) => {
@@ -52,11 +54,17 @@ const DistrictSelect: FC<Props> = ({
           disabled={disabled}
           label="District"
           value={selectedValue}
-          defaultValue={districts[0].subdistrict[0].key}
+          defaultValue={
+            outsideDavao ? "outside" : districts[0].subdistrict[0].key
+          }
           onChange={onSelect}
           variant="standard"
         >
-          {districts.map((dist) => renderDistricts(dist))}
+          {outsideDavao ? (
+            <MenuItem value="outside">Outside Davao</MenuItem>
+          ) : (
+            districts.map((dist) => renderDistricts(dist))
+          )}
         </Select>
       </FormControl>
     </>
