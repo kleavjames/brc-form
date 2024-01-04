@@ -22,7 +22,7 @@ import { Gender, LeadershipLevel, Status } from "../../redux/profiles/enums";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   selectDefaultProfile,
-  selectValidProfile,
+  // selectValidProfile,
 } from "../../redux/profiles/selectors";
 import { actions } from "../../redux/profiles/slice";
 import Loader from "../Loader";
@@ -39,7 +39,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
   const loadingProfile = useAppSelector(
     (state) => state.profiles.loadingProfile
   );
-  const isValidateProfToEdit = useAppSelector(selectValidProfile);
+  // const isValidateProfToEdit = useAppSelector(selectValidProfile); // TODO: validate profile update
 
   const [showDelete, setShowDelete] = useState(false);
 
@@ -396,7 +396,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     name="votingOutsideDvo"
                     checked={profile.votingOutsideDvo}
                     inputProps={{ "aria-label": "controlled" }}
-                    onChange={(e) => handleChecked(e, "outSideVoter")} // TODO:
+                    onChange={(e) => handleChecked(e, "outSideVoter")}
                   />
                 }
                 label="Registered voter (Outside Davao)"
@@ -412,7 +412,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     name="sameAddress"
                     checked={profile.sameAddress}
                     inputProps={{ "aria-label": "controlled" }}
-                    onChange={(e) => handleChecked(e, "sameDetails")} // TODO:
+                    onChange={(e) => handleChecked(e, "sameDetails")}
                   />
                 }
                 label="Details is same with present info"
@@ -503,9 +503,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
           )}
           <Stack direction="row" spacing={3}>
             <Button onClick={onHandleClose}>Cancel</Button>
-            <Button onClick={updateProfile} disabled={!isValidateProfToEdit}>
-              Update
-            </Button>
+            <Button onClick={updateProfile}>Update</Button>
           </Stack>
         </DialogActions>
       </Dialog>
