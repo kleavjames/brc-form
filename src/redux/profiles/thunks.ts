@@ -32,7 +32,26 @@ export const updateProfileThunk = createAsyncThunk<
   undefined,
   { state: RootState }
 >("profiles/updateProfileThunk", async (_, { getState }) => {
-  const { defaultProfile } = getState().profiles;
+  const { defaultProfile, profiles } = getState().profiles;
+
+  for await (const profile of profiles) {
+    if (profile._id === defaultProfile._id) {
+      continue;
+    }
+    if (
+      profile.firstName.toLowerCase() ===
+        defaultProfile.firstName.toLowerCase() &&
+      profile.middleName.toLowerCase() ===
+        defaultProfile.middleName.toLowerCase() &&
+      profile.lastName.toLowerCase() === defaultProfile.lastName.toLowerCase()
+    ) {
+      toast.error(
+        "Profile already exist. Create a new one or update the existing data",
+        errorToast
+      );
+      throw new Error("failed");
+    }
+  }
 
   try {
     const response = await updateProfile(defaultProfile);

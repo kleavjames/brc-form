@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { selectPersonalInfo } from "../redux/profiles/selectors";
 import { actions } from "../redux/profiles/slice";
 import { Gender, Status } from "../redux/profiles/enums";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 export default function PersonalInformation() {
   const dispatch = useAppDispatch();
@@ -26,6 +28,13 @@ export default function PersonalInformation() {
           value: e.target.value,
         })
       );
+    },
+    [dispatch]
+  );
+
+  const handleCheck = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(actions.setAddressOutsideDavao(e.target.checked));
     },
     [dispatch]
   );
@@ -166,6 +175,24 @@ export default function PersonalInformation() {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
+          <FormControlLabel
+            sx={{ mt: 3 }}
+            control={
+              <Checkbox
+                color="primary"
+                name="outsideDvo"
+                checked={personalInfo.outsideDvo}
+                inputProps={{ "aria-label": "controlled" }}
+                onChange={handleCheck}
+              />
+            }
+            label="Currently residing outside davao"
+          />
+          <Typography variant="body2" fontStyle="italic" color="grey">
+            *No need to input district and barangay if address is not in davao
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             required
             id="address"
@@ -181,6 +208,7 @@ export default function PersonalInformation() {
         <Grid item xs={12} sm={6}>
           <DistrictSelect
             onSelect={onSelectChange}
+            outsideDavao={personalInfo.outsideDvo}
             selectedValue={personalInfo.district}
           />
         </Grid>
