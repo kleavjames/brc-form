@@ -14,7 +14,7 @@ import Grid from "@mui/material/Grid";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import {
   selectValidChurchInfo,
-  selectValidProfileInfo,
+  selectValidPersonalInfo,
   selectValidVotersInfo,
 } from "../redux/profiles/selectors";
 import { actions } from "../redux/profiles/slice";
@@ -39,7 +39,7 @@ function getStepContent(step: number) {
 
 export default function Registration() {
   const dispatch = useAppDispatch();
-  const isValidProfileInfo = useAppSelector(selectValidProfileInfo);
+  const isValidPersonalInfo = useAppSelector(selectValidPersonalInfo);
   const isValidChurchInfo = useAppSelector(selectValidChurchInfo);
   const isValidVotersInfo = useAppSelector(selectValidVotersInfo);
   const loadingProfile = useAppSelector(
@@ -68,7 +68,7 @@ export default function Registration() {
   const isValid = () => {
     switch (activeStep) {
       case 0:
-        return !isValidProfileInfo;
+        return !isValidPersonalInfo;
       case 1:
         return !isValidChurchInfo;
       case 2:

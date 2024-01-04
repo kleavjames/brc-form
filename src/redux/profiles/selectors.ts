@@ -30,7 +30,7 @@ export const selectVotersInfo = createSelector(
   (state) => state.votersInfo
 );
 
-export const selectValidProfileInfo = createSelector(
+export const selectValidPersonalInfo = createSelector(
   profilesSelector,
   (profile) => {
     const {
@@ -103,6 +103,43 @@ export const selectValidVotersInfo = createSelector(
     }
 
     return false;
+  }
+);
+
+export const selectValidProfile = createSelector(
+  profilesSelector,
+  (profile) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+      birthdate,
+      address,
+      city,
+      region,
+      leadershipLevel,
+      networkHead,
+      divineAppointmentDate,
+    } = profile.defaultProfile;
+
+    // disable update
+    if (
+      !firstName ||
+      !lastName ||
+      !middleName ||
+      !birthdate ||
+      !address ||
+      !city ||
+      !region ||
+      (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
+      !divineAppointmentDate
+    ) {
+      return false;
+    } else if (leadershipLevel === LeadershipLevel.Visitors) {
+      return true;
+    }
+
+    return true;
   }
 );
 

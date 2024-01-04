@@ -36,7 +36,15 @@ const Dashboard = () => {
       <Box sx={{ m: 3 }}>
         <Grid container spacing={3} sx={{ flexGrow: 1 }}>
           <Grid item xs={12} md={3}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="600">
                 BRC Profiles
               </Typography>
@@ -46,7 +54,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 Registered Voters (Davao)
               </Typography>
@@ -56,7 +72,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 Registered Voters (Outside Davao)
               </Typography>
@@ -66,7 +90,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 Not Registered Voter
               </Typography>
@@ -76,7 +108,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 District I
               </Typography>
@@ -86,7 +126,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 District II
               </Typography>
@@ -96,7 +144,15 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                display: { xs: "flex", md: "block" },
+                flexDirection: { xs: "column" },
+                alignItems: { xs: "center" },
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 District III
               </Typography>
@@ -153,7 +209,12 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Paper elevation={0} sx={{ p: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+              }}
+            >
               <Typography variant="h6" fontWeight="500">
                 Registered Voters
               </Typography>
@@ -162,6 +223,9 @@ const Dashboard = () => {
                   [`& .${pieArcLabelClasses.root}`]: {
                     fill: "white",
                     fontWeight: "bold",
+                  },
+                  "& .MuiChartsLegend-root": {
+                    display: { xs: "none", lg: "block" },
                   },
                 }}
                 series={[
@@ -197,6 +261,10 @@ const Dashboard = () => {
                   },
                 ]}
                 height={400}
+                margin={{
+                  // left: 80,
+                  right: 0,
+                }}
               />
             </Paper>
           </Grid>

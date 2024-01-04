@@ -266,6 +266,10 @@ const slice = createSlice({
       }>
     ) => {
       (state.defaultProfile as ObjectKeyValue)[payload.name] = payload.value;
+      if (state.defaultProfile.leadershipLevel === LeadershipLevel.Visitors) {
+        state.defaultProfile.divineAppointmentDate = null;
+        state.defaultProfile.networkHead = "";
+      }
       if (state.defaultProfile.district) {
         if (state.defaultProfile.district === "outside") {
           state.defaultProfile.districtNumber = 0;

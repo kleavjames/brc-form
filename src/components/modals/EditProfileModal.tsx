@@ -20,7 +20,10 @@ import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
 import { Gender, LeadershipLevel, Status } from "../../redux/profiles/enums";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { selectDefaultProfile } from "../../redux/profiles/selectors";
+import {
+  selectDefaultProfile,
+  selectValidProfile,
+} from "../../redux/profiles/selectors";
 import { actions } from "../../redux/profiles/slice";
 import Loader from "../Loader";
 import { VoterCheckType } from "../../redux/profiles/types";
@@ -36,6 +39,8 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
   const loadingProfile = useAppSelector(
     (state) => state.profiles.loadingProfile
   );
+  const isValidateProfToEdit = useAppSelector(selectValidProfile);
+
   const [showDelete, setShowDelete] = useState(false);
 
   const handleChecked = useCallback(
@@ -354,7 +359,11 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     placeholder: "Divide Appointment Date",
                   },
                 }}
-                value={new Date(profile.divineAppointmentDate!)}
+                value={
+                  profile.divineAppointmentDate
+                    ? new Date(profile.divineAppointmentDate!)
+                    : null
+                }
                 onChange={(e) => onSelectDate(e, "divineAppointmentDate")}
               />
             </Grid>
@@ -494,7 +503,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
           )}
           <Stack direction="row" spacing={3}>
             <Button onClick={onHandleClose}>Cancel</Button>
-            <Button onClick={updateProfile}>Update</Button>
+            <Button onClick={updateProfile} disabled={!isValidateProfToEdit}>
+              Update
+            </Button>
           </Stack>
         </DialogActions>
       </Dialog>
