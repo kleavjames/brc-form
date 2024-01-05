@@ -120,10 +120,14 @@ export const selectValidProfile = createSelector(
       leadershipLevel,
       networkHead,
       divineAppointmentDate,
+      isRegistered,
+      votingOutsideDvo,
+      votingCity,
+      votingRegion,
     } = profile.defaultProfile;
 
-    // disable update
     if (
+      // disable if fields are empty
       !firstName ||
       !lastName ||
       !middleName ||
@@ -131,12 +135,16 @@ export const selectValidProfile = createSelector(
       !address ||
       !city ||
       !region ||
-      (leadershipLevel !== LeadershipLevel.SeniorPastor && !networkHead) ||
-      !divineAppointmentDate
+      // or voting city and region is empty when user is a voter
+      ((isRegistered || votingOutsideDvo) && (!votingCity || !votingRegion)) ||
+      // or no network/DA date if leadership level is all options except visitors
+      ((!networkHead || !divineAppointmentDate) &&
+        leadershipLevel !== LeadershipLevel.SeniorPastor &&
+        leadershipLevel !== LeadershipLevel.Visitors) ||
+      (leadershipLevel === LeadershipLevel.SeniorPastor &&
+        !divineAppointmentDate)
     ) {
       return false;
-    } else if (leadershipLevel === LeadershipLevel.Visitors) {
-      return true;
     }
 
     return true;
@@ -250,7 +258,7 @@ export const selectDistrictOneBarangay = createSelector(
     }
 
     return districtBarangays.sort((a, b) => {
-      if (a.name > b.name) return 1;
+      if (a.total < b.total) return 1;
       else return -1;
     });
   }
@@ -297,7 +305,7 @@ export const selectDistrictTwoBarangay = createSelector(
     }
 
     return districtBarangays.sort((a, b) => {
-      if (a.name > b.name) return 1;
+      if (a.total < b.total) return 1;
       else return -1;
     });
   }
@@ -344,7 +352,7 @@ export const selectDistrictThreeBarangay = createSelector(
     }
 
     return districtBarangays.sort((a, b) => {
-      if (a.name > b.name) return 1;
+      if (a.total < b.total) return 1;
       else return -1;
     });
   }

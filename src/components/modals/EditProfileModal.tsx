@@ -22,7 +22,7 @@ import { Gender, LeadershipLevel, Status } from "../../redux/profiles/enums";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   selectDefaultProfile,
-  // selectValidProfile,
+  selectValidProfile,
 } from "../../redux/profiles/selectors";
 import { actions } from "../../redux/profiles/slice";
 import Loader from "../Loader";
@@ -39,7 +39,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
   const loadingProfile = useAppSelector(
     (state) => state.profiles.loadingProfile
   );
-  // const isValidateProfToEdit = useAppSelector(selectValidProfile); // TODO: validate profile update
+  const isValidateProfToEdit = useAppSelector(selectValidProfile);
 
   const [showDelete, setShowDelete] = useState(false);
 
@@ -386,6 +386,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 }
                 label="Registered voter"
               />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *Registered voter within davao city
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControlLabel
@@ -401,6 +404,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 }
                 label="Registered voter (Outside Davao)"
               />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *Registered voter outside davao city
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControlLabel
@@ -426,7 +432,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 id="votingPrecinctId"
                 name="votingPrecinctId"
-                label="Precinct ID"
+                label="Precinct ID (Optional)"
                 value={profile.votingPrecinctId || ""}
                 fullWidth
                 autoComplete="precinct-id"
@@ -503,7 +509,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
           )}
           <Stack direction="row" spacing={3}>
             <Button onClick={onHandleClose}>Cancel</Button>
-            <Button onClick={updateProfile}>Update</Button>
+            <Button onClick={updateProfile} disabled={!isValidateProfToEdit}>
+              Update
+            </Button>
           </Stack>
         </DialogActions>
       </Dialog>

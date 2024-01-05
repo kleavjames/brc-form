@@ -204,7 +204,7 @@ const Profiles = () => {
         { field: "gender" },
         { field: "status" },
         { field: "address" },
-        { field: "district" },
+        { field: "districtNumber" },
       ],
     },
     {
