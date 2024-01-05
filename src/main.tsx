@@ -6,7 +6,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme.ts";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { HashRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
@@ -21,13 +20,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <HashRouter basename="/">
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <CssBaseline />
-            <App />
-            <ToastContainer />
-          </LocalizationProvider>
-        </HashRouter>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <CssBaseline />
+          <App />
+          <ToastContainer />
+        </LocalizationProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

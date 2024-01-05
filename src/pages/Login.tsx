@@ -10,11 +10,12 @@ function Login() {
   return (
     <Box
       sx={{
+        height: "100dvh",
         display: "flex",
         alignItems: "center",
-        height: "100%",
+        width: "100%",
         justifyContent: "center",
-        mx: 3,
+        mx: { xs: 3 },
       }}
     >
       <Paper
