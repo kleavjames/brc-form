@@ -386,6 +386,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 }
                 label="Registered voter"
               />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *Registered voter within davao city
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControlLabel
@@ -396,11 +399,14 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     name="votingOutsideDvo"
                     checked={profile.votingOutsideDvo}
                     inputProps={{ "aria-label": "controlled" }}
-                    onChange={(e) => handleChecked(e, "outSideVoter")} // TODO:
+                    onChange={(e) => handleChecked(e, "outSideVoter")}
                   />
                 }
                 label="Registered voter (Outside Davao)"
               />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *Registered voter outside davao city
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControlLabel
@@ -412,7 +418,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     name="sameAddress"
                     checked={profile.sameAddress}
                     inputProps={{ "aria-label": "controlled" }}
-                    onChange={(e) => handleChecked(e, "sameDetails")} // TODO:
+                    onChange={(e) => handleChecked(e, "sameDetails")}
                   />
                 }
                 label="Details is same with present info"
@@ -426,7 +432,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 id="votingPrecinctId"
                 name="votingPrecinctId"
-                label="Precinct ID"
+                label="Precinct ID (Optional)"
                 value={profile.votingPrecinctId || ""}
                 fullWidth
                 autoComplete="precinct-id"

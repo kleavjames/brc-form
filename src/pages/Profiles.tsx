@@ -29,6 +29,20 @@ const Profiles = () => {
 
   const columns: GridColDef[] = [
     {
+      field: "registered",
+      headerName: "Registered",
+      type: "boolean",
+      sortable: true,
+      filterable: true,
+      valueGetter: ({ row }) => {
+        if (row.isRegistered || row.votingOutsideDvo) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    },
+    {
       field: "fullName",
       headerName: "Full Name",
       width: 250,
@@ -204,7 +218,7 @@ const Profiles = () => {
         { field: "gender" },
         { field: "status" },
         { field: "address" },
-        { field: "district" },
+        { field: "districtNumber" },
       ],
     },
     {
