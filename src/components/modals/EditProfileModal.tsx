@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -20,9 +20,13 @@ import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
 import { Gender, LeadershipLevel, Status } from "../../redux/profiles/enums";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { selectDefaultProfile } from "../../redux/profiles/selectors";
+import {
+  selectDefaultProfile,
+  selectValidProfile,
+} from "../../redux/profiles/selectors";
 import { actions } from "../../redux/profiles/slice";
 import Loader from "../Loader";
+import { VoterCheckType } from "../../redux/profiles/types";
 
 type EditProfileProps = {
   open: boolean;
@@ -35,11 +39,18 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
   const loadingProfile = useAppSelector(
     (state) => state.profiles.loadingProfile
   );
+  const isValidateProfToEdit = useAppSelector(selectValidProfile);
+
   const [showDelete, setShowDelete] = useState(false);
 
-  const handleVoteChecked = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch(actions.setProfileIsRegisterd(e.target.checked));
+  const handleChecked = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, type: VoterCheckType) => {
+      dispatch(
+        actions.setUpdateProfileCheck({
+          checked: e.target.checked,
+          type,
+        })
+      );
     },
     [dispatch]
   );
@@ -87,6 +98,17 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
     },
     [dispatch]
   );
+
+  const disableByAddress = useMemo(() => {
+    if (
+      (!profile.isRegistered && !profile.votingOutsideDvo) ||
+      (profile.outsideDvo && profile.isRegistered) ||
+      (!profile.outsideDvo && profile.votingOutsideDvo)
+    ) {
+      return true;
+    }
+    return false;
+  }, [profile.isRegistered, profile.outsideDvo, profile.votingOutsideDvo]);
 
   const onSelectDate = useCallback(
     (value: Date | null, field: "birthdate" | "divineAppointmentDate") => {
@@ -188,6 +210,24 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 }}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    name="outsideDvo"
+                    checked={profile.outsideDvo}
+                    inputProps={{ "aria-label": "controlled" }}
+                    onChange={(e) => handleChecked(e, "currOutside")}
+                  />
+                }
+                label="Currently residing outside davao"
+              />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *No need to input district and barangay if address is not in
+                davao
+              </Typography>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 required
@@ -223,6 +263,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
             <Grid item xs={12} sm={4}>
               <DistrictSelect
                 onSelect={onSelectChange}
+                outsideDavao={profile.outsideDvo}
                 selectedValue={profile.district}
               />
             </Grid>
@@ -318,7 +359,11 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     placeholder: "Divide Appointment Date",
                   },
                 }}
-                value={new Date(profile.divineAppointmentDate!)}
+                value={
+                  profile.divineAppointmentDate
+                    ? new Date(profile.divineAppointmentDate!)
+                    : null
+                }
                 onChange={(e) => onSelectDate(e, "divineAppointmentDate")}
               />
             </Grid>
@@ -327,7 +372,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
             Voter's Information
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={4}>
               <FormControlLabel
                 sx={{ mt: 3 }}
                 control={
@@ -336,15 +381,49 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                     name="isRegistered"
                     checked={profile.isRegistered}
                     inputProps={{ "aria-label": "controlled" }}
-                    onChange={handleVoteChecked}
+                    onChange={(e) => handleChecked(e, "forVoter")}
                   />
                 }
                 label="Registered voter"
               />
             </Grid>
-            <Grid item xs={12} sm={4} md={2}>
+            <Grid item xs={12} sm={4}>
+              <FormControlLabel
+                sx={{ mt: 3 }}
+                control={
+                  <Checkbox
+                    color="primary"
+                    name="votingOutsideDvo"
+                    checked={profile.votingOutsideDvo}
+                    inputProps={{ "aria-label": "controlled" }}
+                    onChange={(e) => handleChecked(e, "outSideVoter")} // TODO:
+                  />
+                }
+                label="Registered voter (Outside Davao)"
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControlLabel
+                disabled={disableByAddress}
+                sx={{ mt: 3 }}
+                control={
+                  <Checkbox
+                    color="primary"
+                    name="sameAddress"
+                    checked={profile.sameAddress}
+                    inputProps={{ "aria-label": "controlled" }}
+                    onChange={(e) => handleChecked(e, "sameDetails")} // TODO:
+                  />
+                }
+                label="Details is same with present info"
+              />
+              <Typography variant="body2" fontStyle="italic" color="grey">
+                *Check if your voter's info is the same as your personal info
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={4} md={3}>
               <TextField
-                disabled={!profile.isRegistered}
+                disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 id="votingPrecinctId"
                 name="votingPrecinctId"
                 label="Precinct ID"
@@ -355,11 +434,12 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
                 onChange={onChangeText}
               />
             </Grid>
-            <Grid item xs={12} sm={4} md={5}>
+            <Grid item xs={12} sm={4} md={4}>
               <DistrictSelect
                 forVoter
                 onSelect={onSelectChange}
-                disabled={!profile.isRegistered}
+                outsideDavao={profile.votingOutsideDvo}
+                disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 selectedValue={profile.votingDistrict || "poblacion"}
               />
             </Grid>
@@ -367,7 +447,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
               <BarangaySelect
                 forVoter
                 onSelect={onSelectChange}
-                disabled={!profile.isRegistered}
+                disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 districtValue={profile.votingDistrict || "poblacion"}
                 selectedValue={profile.votingBarangay || "1-A"}
               />
@@ -375,7 +455,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
             <Grid item xs={12} sm={6}>
               <TextField
                 required
-                disabled={!profile.isRegistered}
+                disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 id="votingCity"
                 name="votingCity"
                 label="City/Municipality"
@@ -389,7 +469,7 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
             <Grid item xs={12} sm={6}>
               <TextField
                 id="votingRegion"
-                disabled={!profile.isRegistered}
+                disabled={!profile.isRegistered && !profile.votingOutsideDvo}
                 name="votingRegion"
                 label="Province/Region"
                 fullWidth
@@ -423,7 +503,9 @@ const EditProfileModal: FC<EditProfileProps> = ({ open, onClose }) => {
           )}
           <Stack direction="row" spacing={3}>
             <Button onClick={onHandleClose}>Cancel</Button>
-            <Button onClick={updateProfile}>Update</Button>
+            <Button onClick={updateProfile} disabled={!isValidateProfToEdit}>
+              Update
+            </Button>
           </Stack>
         </DialogActions>
       </Dialog>

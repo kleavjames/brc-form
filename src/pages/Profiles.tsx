@@ -98,7 +98,14 @@ const Profiles = () => {
       filterable: true,
       sortable: false,
       align: "left",
+      width: 140,
       headerAlign: "left",
+      valueFormatter: (params: GridValueFormatterParams<number>) => {
+        if (params.value === 0) {
+          return "Outside Davao";
+        }
+        return params.value;
+      },
     },
     {
       field: "networkHead",
@@ -136,6 +143,9 @@ const Profiles = () => {
       filterable: true,
       sortable: false,
       valueFormatter: (params: GridValueFormatterParams<string>) => {
+        if (params.value === null) {
+          return "";
+        }
         return format(new Date(params.value), "MMMM, yyyy");
       },
     },
@@ -154,6 +164,12 @@ const Profiles = () => {
       sortable: false,
       align: "left",
       headerAlign: "left",
+      valueFormatter: (params: GridValueFormatterParams<number>) => {
+        if (params.value === 0) {
+          return "Outside Davao";
+        }
+        return params.value;
+      },
     },
     {
       field: "votingAddress",
@@ -162,6 +178,9 @@ const Profiles = () => {
       filterable: false,
       sortable: false,
       valueGetter: ({ row }) => {
+        if (row.votingDistrict === "outside") {
+          return "Outside Davao";
+        }
         if (!row.votingBarangay || !row.votingCity || !row.votingRegion) {
           return "";
         }

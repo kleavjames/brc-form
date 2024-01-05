@@ -23,6 +23,9 @@ const BarangaySelect: FC<Props> = ({
   forVoter = false,
 }) => {
   const renderBarangays = useCallback(() => {
+    if (districtValue === "outside") {
+      return <MenuItem value="outside"> </MenuItem>;
+    }
     return (barangays as unknown as Barangays)[districtValue].map(
       (barangay: any) => (
         <MenuItem key={barangay.key} value={barangay.value}>

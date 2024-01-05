@@ -10,6 +10,7 @@ import Profiles from "./pages/Profiles";
 import Login from "./pages/Login";
 import { useAppDispatch } from "./redux/store";
 import { loadProfileThunks } from "./redux/profiles/thunks";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +43,8 @@ const App = () => {
         <Login />
         {/* <Toolbar />
         <Routes>
-          <Route path="/" element={<Profiles />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/profiles" element={<Profiles />} />
           <Route path="/register" element={<Registration />} />
         </Routes> */}
       </Box>

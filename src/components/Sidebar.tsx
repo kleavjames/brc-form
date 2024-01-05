@@ -10,6 +10,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import BRCLogo from "../assets/BRC_logo.png";
 import Box from "@mui/material/Box";
@@ -70,15 +71,34 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
             selected={location.pathname === "/"}
           >
             <ListItemIcon>
-              <ContactPageIcon
+              <DashboardIcon
                 color={location.pathname === "/" ? "primary" : "action"}
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary="Dashboard"
+              sx={{
+                color: ({ palette }) =>
+                  location.pathname === "/"
+                    ? palette.primary.main
+                    : theme.palette.action.activatedOpacity,
+              }}
+            />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => navigate("/profiles")}
+            selected={location.pathname === "/profiles"}
+          >
+            <ListItemIcon>
+              <ContactPageIcon
+                color={location.pathname === "/profiles" ? "primary" : "action"}
               />
             </ListItemIcon>
             <ListItemText
               primary="Profiles"
               sx={{
                 color: ({ palette }) =>
-                  location.pathname === "/"
+                  location.pathname === "/profiles"
                     ? palette.primary.main
                     : theme.palette.action.activatedOpacity,
               }}
@@ -137,22 +157,41 @@ const Sidebar: FC<SidebarProps> = ({ open, toggleDrawer }) => {
       <Divider />
       <List component="nav" disablePadding>
         <ListItemButton
-          onClick={() => {
-            navigate("/");
-            toggleDrawer();
-          }}
+          onClick={() => navigate("/")}
           selected={location.pathname === "/"}
         >
           <ListItemIcon>
-            <ContactPageIcon
+            <DashboardIcon
               color={location.pathname === "/" ? "primary" : "action"}
+            />
+          </ListItemIcon>
+          <ListItemText
+            primary="Dashboard"
+            sx={{
+              color: ({ palette }) =>
+                location.pathname === "/"
+                  ? palette.primary.main
+                  : theme.palette.action.activatedOpacity,
+            }}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            navigate("/profiles");
+            toggleDrawer();
+          }}
+          selected={location.pathname === "/profiles"}
+        >
+          <ListItemIcon>
+            <ContactPageIcon
+              color={location.pathname === "/profiles" ? "primary" : "action"}
             />
           </ListItemIcon>
           <ListItemText
             primary="Profiles"
             sx={{
               color: ({ palette }) =>
-                location.pathname === "/"
+                location.pathname === "/profiles"
                   ? palette.primary.main
                   : theme.palette.action.activatedOpacity,
             }}

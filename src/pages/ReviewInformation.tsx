@@ -186,7 +186,7 @@ export default function ReviewInformation() {
             </ListItem>
           </List>
         </Box>
-        {votersInfo.isRegistered ? (
+        {votersInfo.isRegistered || votersInfo.votingOutsideDvo ? (
           <Box>
             <Typography fontWeight="700" gutterBottom>
               Voters Address
@@ -210,7 +210,11 @@ export default function ReviewInformation() {
                   sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
                   color="primary"
                 >
-                  {votersInfo.votingBarangay}
+                  {votersInfo.votingOutsideDvo
+                    ? "Outside Davao"
+                    : votersInfo.isRegistered
+                    ? votersInfo.votingBarangay
+                    : ""}
                 </Typography>
               </ListItem>
               <ListItem>
@@ -220,7 +224,11 @@ export default function ReviewInformation() {
                   sx={{ whiteSpace: "pre-wrap", textAlign: "right" }}
                   color="primary"
                 >
-                  {votersDistrict}
+                  {votersInfo.votingOutsideDvo
+                    ? "Outside Davao"
+                    : votersInfo.isRegistered
+                    ? votersDistrict
+                    : ""}
                 </Typography>
               </ListItem>
               <ListItem>
