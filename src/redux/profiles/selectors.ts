@@ -1,7 +1,13 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { LeadershipLevel } from "./enums";
-import { DistrictBarangayMap, DistrictBarangays } from "./types";
+import {
+  DistrictBarangayMap,
+  DistrictBarangays,
+  ObjectKeyValue,
+} from "./types";
+import { barangays } from "../../constants/barangay";
+import { districts } from "../../constants/district";
 
 const profilesSelector = (state: RootState) => state.profiles;
 
@@ -222,28 +228,27 @@ export const selectDistrictOneBarangay = createSelector(
   (state) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
+    const subdistricts = districts[0].subdistrict;
+    for (const subdistrict of subdistricts) {
+      for (const barangay of (barangays as ObjectKeyValue)[subdistrict.key]) {
+        mappedProfiles[barangay.value] = {
+          total: 0,
+          registered: 0,
+          nonRegistered: 0,
+        };
+      }
+    }
+
     for (const profile of state.profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 1) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;
           mappedProfiles[profile.votingBarangay as string].registered += 1;
-        } else {
-          mappedProfiles[profile.votingBarangay as string] = {
-            total: 1,
-            registered: 1,
-            nonRegistered: 0,
-          };
         }
       } else if (!profile.isRegistered && profile.districtNumber === 1) {
         if (mappedProfiles[profile.barangay as string]) {
           mappedProfiles[profile.barangay as string].total += 1;
           mappedProfiles[profile.barangay as string].nonRegistered += 1;
-        } else {
-          mappedProfiles[profile.barangay as string] = {
-            total: 1,
-            registered: 0,
-            nonRegistered: 1,
-          };
         }
       }
     }
@@ -269,28 +274,27 @@ export const selectDistrictTwoBarangay = createSelector(
   (state) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
+    const subdistricts = districts[1].subdistrict;
+    for (const subdistrict of subdistricts) {
+      for (const barangay of (barangays as ObjectKeyValue)[subdistrict.key]) {
+        mappedProfiles[barangay.value] = {
+          total: 0,
+          registered: 0,
+          nonRegistered: 0,
+        };
+      }
+    }
+
     for (const profile of state.profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 2) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;
           mappedProfiles[profile.votingBarangay as string].registered += 1;
-        } else {
-          mappedProfiles[profile.votingBarangay as string] = {
-            total: 1,
-            registered: 1,
-            nonRegistered: 0,
-          };
         }
       } else if (!profile.isRegistered && profile.districtNumber === 2) {
         if (mappedProfiles[profile.barangay as string]) {
           mappedProfiles[profile.barangay as string].total += 1;
           mappedProfiles[profile.barangay as string].nonRegistered += 1;
-        } else {
-          mappedProfiles[profile.barangay as string] = {
-            total: 1,
-            registered: 0,
-            nonRegistered: 1,
-          };
         }
       }
     }
@@ -316,28 +320,27 @@ export const selectDistrictThreeBarangay = createSelector(
   (state) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
+    const subdistricts = districts[2].subdistrict;
+    for (const subdistrict of subdistricts) {
+      for (const barangay of (barangays as ObjectKeyValue)[subdistrict.key]) {
+        mappedProfiles[barangay.value] = {
+          total: 0,
+          registered: 0,
+          nonRegistered: 0,
+        };
+      }
+    }
+
     for (const profile of state.profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 3) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;
           mappedProfiles[profile.votingBarangay as string].registered += 1;
-        } else {
-          mappedProfiles[profile.votingBarangay as string] = {
-            total: 1,
-            registered: 1,
-            nonRegistered: 0,
-          };
         }
       } else if (!profile.isRegistered && profile.districtNumber === 3) {
         if (mappedProfiles[profile.barangay as string]) {
           mappedProfiles[profile.barangay as string].total += 1;
           mappedProfiles[profile.barangay as string].nonRegistered += 1;
-        } else {
-          mappedProfiles[profile.barangay as string] = {
-            total: 1,
-            registered: 0,
-            nonRegistered: 1,
-          };
         }
       }
     }
