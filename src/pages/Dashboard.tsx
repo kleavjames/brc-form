@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -6,29 +6,64 @@ import Typography from "@mui/material/Typography";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import BarangayTable from "../components/tables/BarangayTable";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import {
   selectDistrictOneBarangay,
   selectDistrictThreeBarangay,
   selectDistrictTwoBarangay,
+  selectProfileNetworkHead,
   selectTotalProfiles,
 } from "../redux/profiles/selectors";
+import NetworkHeadsSelect from "../components/NetworkHeadsSelect";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { actions } from "../redux/profiles/slice";
 
 const Dashboard = () => {
+  const dispatch = useAppDispatch();
   const total = useAppSelector(selectTotalProfiles);
+  const networkHead = useAppSelector(selectProfileNetworkHead);
   const districtOneBarangays = useAppSelector(selectDistrictOneBarangay);
   const districtTwoBarangays = useAppSelector(selectDistrictTwoBarangay);
   const districtThreeBarangays = useAppSelector(selectDistrictThreeBarangay);
+
+  const onSelectChange = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      dispatch(actions.setFilterByNetworkHead(e.target.value));
+    },
+    [dispatch]
+  );
 
   return (
     <Fragment>
       <Box sx={{ m: 3 }}>
         <Grid container>
           <Grid item xs={12}>
-            <Paper elevation={0} sx={{ p: { xs: 2, md: 3 } }}>
-              <Typography color="primary" variant="h4" fontWeight="500">
-                PROFILE SUMMARY
+            <Paper
+              elevation={0}
+              sx={{
+                p: { xs: 2, md: 3 },
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography color="primary" variant="h4" fontWeight="700">
+                PROFILING SUMMARY
               </Typography>
+              <Box
+                sx={{
+                  width: { xs: "100%", md: "50%", lg: "25%" },
+                  mt: { xs: 5, md: 0 },
+                  px: { xs: 2, md: 0 },
+                }}
+              >
+                <NetworkHeadsSelect
+                  forFilter
+                  onSelect={onSelectChange}
+                  selectedValue={networkHead}
+                />
+              </Box>
             </Paper>
           </Grid>
         </Grid>
@@ -270,7 +305,7 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper elevation={0} sx={{ p: { xs: 2, md: 3 } }}>
-              <Typography color="primary" variant="h4" fontWeight="500">
+              <Typography color="primary" variant="h4" fontWeight="700">
                 BARANGAY SUMMARY
               </Typography>
             </Paper>
