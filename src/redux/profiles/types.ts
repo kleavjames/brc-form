@@ -64,6 +64,7 @@ export interface Barangays {
 }
 
 export interface ProfileState {
+  networkHead: string;
   loadingProfileTable: boolean;
   loadingProfile: boolean;
   profiles: Profiles[];

@@ -11,11 +11,6 @@ import { districts } from "../../constants/district";
 
 const profilesSelector = (state: RootState) => state.profiles;
 
-export const selectProfiles = createSelector(
-  profilesSelector,
-  (state) => state.profiles
-);
-
 export const selectDefaultProfile = createSelector(
   profilesSelector,
   (state) => state.defaultProfile
@@ -35,6 +30,21 @@ export const selectVotersInfo = createSelector(
   profilesSelector,
   (state) => state.votersInfo
 );
+
+export const selectProfileNetworkHead = createSelector(
+  profilesSelector,
+  (state) => state.networkHead
+);
+
+export const selectProfiles = createSelector(profilesSelector, (state) => {
+  if (state.networkHead === "") {
+    return state.profiles;
+  }
+
+  return state.profiles.filter(
+    (profile) => profile.networkHead === state.networkHead
+  );
+});
 
 export const selectValidPersonalInfo = createSelector(
   profilesSelector,
@@ -157,75 +167,78 @@ export const selectValidProfile = createSelector(
   }
 );
 
-export const selectTotalProfiles = createSelector(profilesSelector, (state) => {
-  let profileCount = 0;
-  const profileRegistered = [];
-  const profileRegisteredOutside = [];
-  const nonRegisteredProfiles = [];
-  // by districts registered / non registered
-  let totalDistrict1 = 0;
-  let totalDistrict2 = 0;
-  let totalDistrict3 = 0;
-  let nonTotalDistrict1 = 0;
-  let nonTotalDistrict2 = 0;
-  let nonTotalDistrict3 = 0;
-  let nonTotalOutside = 0;
+export const selectTotalProfiles = createSelector(
+  selectProfiles,
+  (profiles) => {
+    let profileCount = 0;
+    const profileRegistered = [];
+    const profileRegisteredOutside = [];
+    const nonRegisteredProfiles = [];
+    // by districts registered / non registered
+    let totalDistrict1 = 0;
+    let totalDistrict2 = 0;
+    let totalDistrict3 = 0;
+    let nonTotalDistrict1 = 0;
+    let nonTotalDistrict2 = 0;
+    let nonTotalDistrict3 = 0;
+    let nonTotalOutside = 0;
 
-  for (const profile of state.profiles) {
-    if (profile.isRegistered) {
-      profileRegistered.push(profile);
-    } else if (profile.votingOutsideDvo) {
-      profileRegisteredOutside.push(profile);
-    } else {
-      nonRegisteredProfiles.push(profile);
+    for (const profile of profiles) {
+      if (profile.isRegistered) {
+        profileRegistered.push(profile);
+      } else if (profile.votingOutsideDvo) {
+        profileRegisteredOutside.push(profile);
+      } else {
+        nonRegisteredProfiles.push(profile);
+      }
+
+      profileCount += 1;
     }
 
-    profileCount += 1;
-  }
-
-  // total of voters per davao district
-  for (const profReg of profileRegistered) {
-    if (profReg.votingDistrictNumber === 1) {
-      totalDistrict1 += 1;
-    } else if (profReg.votingDistrictNumber === 2) {
-      totalDistrict2 += 1;
-    } else if (profReg.votingDistrictNumber === 3) {
-      totalDistrict3 += 1;
+    // total of voters per davao district
+    for (const profReg of profileRegistered) {
+      if (profReg.votingDistrictNumber === 1) {
+        totalDistrict1 += 1;
+      } else if (profReg.votingDistrictNumber === 2) {
+        totalDistrict2 += 1;
+      } else if (profReg.votingDistrictNumber === 3) {
+        totalDistrict3 += 1;
+      }
     }
-  }
 
-  // total non voters
-  for (const nonProf of nonRegisteredProfiles) {
-    if (nonProf.districtNumber === 1) {
-      nonTotalDistrict1 += 1;
-    } else if (nonProf.districtNumber === 2) {
-      nonTotalDistrict2 += 1;
-    } else if (nonProf.districtNumber === 3) {
-      nonTotalDistrict3 += 1;
-    } else {
-      nonTotalOutside += 1;
+    // total non voters
+    for (const nonProf of nonRegisteredProfiles) {
+      if (nonProf.districtNumber === 1) {
+        nonTotalDistrict1 += 1;
+      } else if (nonProf.districtNumber === 2) {
+        nonTotalDistrict2 += 1;
+      } else if (nonProf.districtNumber === 3) {
+        nonTotalDistrict3 += 1;
+      } else {
+        nonTotalOutside += 1;
+      }
     }
-  }
 
-  return {
-    totalProfiles: profileCount,
-    totalRegistered: profileRegistered.length,
-    totalRegisteredOutside: profileRegisteredOutside.length,
-    totalNonRegistered: nonRegisteredProfiles.length,
-    totalDistrict1,
-    totalDistrict2,
-    totalDistrict3,
-    totalOutside: profileRegisteredOutside.length,
-    nonTotalDistrict1,
-    nonTotalDistrict2,
-    nonTotalDistrict3,
-    nonTotalOutside,
-  };
-});
+    return {
+      totalProfiles: profileCount,
+      totalRegistered: profileRegistered.length,
+      totalRegisteredOutside: profileRegisteredOutside.length,
+      totalNonRegistered: nonRegisteredProfiles.length,
+      totalDistrict1,
+      totalDistrict2,
+      totalDistrict3,
+      totalOutside: profileRegisteredOutside.length,
+      nonTotalDistrict1,
+      nonTotalDistrict2,
+      nonTotalDistrict3,
+      nonTotalOutside,
+    };
+  }
+);
 
 export const selectDistrictOneBarangay = createSelector(
-  profilesSelector,
-  (state) => {
+  selectProfiles,
+  (profiles) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
     const subdistricts = districts[0].subdistrict;
@@ -239,7 +252,7 @@ export const selectDistrictOneBarangay = createSelector(
       }
     }
 
-    for (const profile of state.profiles) {
+    for (const profile of profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 1) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;
@@ -270,8 +283,8 @@ export const selectDistrictOneBarangay = createSelector(
 );
 
 export const selectDistrictTwoBarangay = createSelector(
-  profilesSelector,
-  (state) => {
+  selectProfiles,
+  (profiles) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
     const subdistricts = districts[1].subdistrict;
@@ -285,7 +298,7 @@ export const selectDistrictTwoBarangay = createSelector(
       }
     }
 
-    for (const profile of state.profiles) {
+    for (const profile of profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 2) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;
@@ -316,8 +329,8 @@ export const selectDistrictTwoBarangay = createSelector(
 );
 
 export const selectDistrictThreeBarangay = createSelector(
-  profilesSelector,
-  (state) => {
+  selectProfiles,
+  (profiles) => {
     const mappedProfiles: DistrictBarangayMap = {};
 
     const subdistricts = districts[2].subdistrict;
@@ -331,7 +344,7 @@ export const selectDistrictThreeBarangay = createSelector(
       }
     }
 
-    for (const profile of state.profiles) {
+    for (const profile of profiles) {
       if (profile.isRegistered && profile.votingDistrictNumber === 3) {
         if (mappedProfiles[profile.votingBarangay as string]) {
           mappedProfiles[profile.votingBarangay as string].total += 1;

@@ -17,6 +17,7 @@ import { Gender, LeadershipLevel, Status } from "./enums";
 import { barangays } from "../../constants/barangay";
 
 export const initialState: ProfileState = {
+  networkHead: "",
   loadingProfileTable: false,
   loadingProfile: false,
   profiles: [],
@@ -290,6 +291,9 @@ const slice = createSlice({
           state.defaultProfile.votingDistrictNumber = districtNum;
         }
       }
+    },
+    setFilterByNetworkHead: (state, { payload }: PayloadAction<string>) => {
+      state.networkHead = payload;
     },
   },
   extraReducers(builder) {

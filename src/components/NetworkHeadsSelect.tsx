@@ -9,20 +9,33 @@ type Props = {
   onSelect: (e: SelectChangeEvent<string>) => void;
   selectedValue: string;
   disabled?: boolean;
+  forFilter?: boolean;
 };
 
 const NetworkHeadsSelect: FC<Props> = ({
   onSelect,
   selectedValue,
   disabled = false,
+  forFilter = false,
 }) => {
   const renderNetworkHeads = useCallback(() => {
+    if (forFilter) {
+      const networkHeadsOnly = networkHeads.filter(
+        (head) => head.id !== 1 && head.id !== 2
+      );
+      return networkHeadsOnly.map((heads) => (
+        <MenuItem key={heads.name} value={heads.name}>
+          {heads.name}
+        </MenuItem>
+      ));
+    }
+
     return networkHeads.map((heads) => (
       <MenuItem key={heads.name} value={heads.name}>
         {heads.name}
       </MenuItem>
     ));
-  }, []);
+  }, [forFilter]);
 
   return (
     <>
