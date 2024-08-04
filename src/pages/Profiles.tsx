@@ -14,7 +14,9 @@ import { useProfiles } from "../hooks/useProfiles";
 const Profiles = () => {
   const {
     profiles,
+    profiles288,
     brgyColumns,
+    brgy288Columns,
     columns,
     openEdit,
     onCloseModal,
@@ -86,6 +88,37 @@ const Profiles = () => {
         { field: "networkHead" },
         { field: "districtNumber" },
         { field: "barangay" },
+      ],
+    },
+    {
+      groupId: "voters_info",
+      headerName: "Voters Information",
+      renderHeaderGroup: (params) => (
+        <Typography variant="h6" color="primary" fontWeight="bold">
+          {params.headerName}
+        </Typography>
+      ),
+      children: [
+        { field: "votingPrecinctId" },
+        { field: "votingDistrictNumber" },
+        { field: "votingBarangay" },
+      ],
+    },
+  ];
+
+  // grouping by barangay profiles
+  const brgy288ColumnGroupingModel: GridColumnGroupingModel = [
+    {
+      groupId: "personal_data",
+      headerName: "Personal Information",
+      renderHeaderGroup: (params) => (
+        <Typography variant="h6" color="primary" fontWeight="bold">
+          {params.headerName}
+        </Typography>
+      ),
+      children: [
+        { field: "fullName" },
+        { field: "networkHead" },
       ],
     },
     {
@@ -181,6 +214,45 @@ const Profiles = () => {
                 toolbar: GridToolbar,
               }}
               columnGroupingModel={brgyColumnGroupingModel}
+            />
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={12}>
+          <Paper elevation={0} sx={{ mx: 3, p: { xs: 2, md: 3 } }}>
+            <Typography color="primary" variant="h4" fontWeight="500">
+              288 Profiles By Barangay
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid>
+        <Grid item xs={12} sx={{ m: 3 }}>
+          <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
+            <DataGrid
+              autoHeight
+              getRowHeight={() => "auto"}
+              sx={{
+                [`& .${gridClasses.cell}`]: {
+                  py: 1,
+                },
+              }}
+              getRowId={(row) => row._id}
+              columns={brgy288Columns}
+              rows={profiles288}
+              loading={loadingProfileTable}
+              disableDensitySelector
+              initialState={{
+                pagination: { paginationModel: { pageSize: 10 } },
+              }}
+              disableColumnSelector
+              pageSizeOptions={[10, 25, 50, 100]}
+              experimentalFeatures={{ columnGrouping: true }}
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              columnGroupingModel={brgy288ColumnGroupingModel}
             />
           </Paper>
         </Grid>

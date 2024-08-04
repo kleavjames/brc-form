@@ -46,6 +46,12 @@ export const selectProfiles = createSelector(profilesSelector, (state) => {
   );
 });
 
+export const select288Profiles = createSelector(profilesSelector, (state) => {
+  return state.profiles.filter(
+    (profile) => profile.leadershipLevel === LeadershipLevel.TwoEightEight && profile.isRegistered
+  );
+});
+
 export const selectValidPersonalInfo = createSelector(
   profilesSelector,
   (profile) => {

@@ -6,13 +6,14 @@ import {
 } from "@mui/x-data-grid";
 import format from "date-fns/format";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { selectProfiles } from "../redux/profiles/selectors";
+import { select288Profiles, selectProfiles } from "../redux/profiles/selectors";
 import { Gender, LeadershipLevel, Status } from "../redux/profiles/enums";
 import { actions } from "../redux/profiles/slice";
 
 export const useProfiles = () => {
   const dispatch = useAppDispatch();
   const profiles = useAppSelector(selectProfiles);
+  const profiles288 = useAppSelector(select288Profiles);
   const loadingProfileTable = useAppSelector(
     (state) => state.profiles.loadingProfileTable
   );
@@ -281,6 +282,56 @@ export const useProfiles = () => {
     },
   ];
 
+  const brgy288Columns: GridColDef[] = [
+    {
+      field: "fullName",
+      headerName: "Full Name",
+      width: 300,
+      sortable: true,
+      filterable: true,
+      valueGetter: ({ row }) => {
+        return `${row.firstName} ${row.middleName} ${row.lastName}`;
+      },
+    },
+    {
+      field: "networkHead",
+      headerName: "Network Head",
+      width: 200,
+      filterable: true,
+      sortable: false,
+    },
+    {
+      field: "votingBarangay",
+      headerName: "Voting Barangay",
+      width: 400,
+      filterable: true,
+      sortable: true,
+    },
+    {
+      type: "number",
+      field: "votingDistrictNumber",
+      headerName: "Voting District",
+      width: 150,
+      filterable: true,
+      sortable: true,
+      align: "left",
+      headerAlign: "left",
+      valueFormatter: (params: GridValueFormatterParams<number>) => {
+        if (params.value === 0) {
+          return "Outside Davao";
+        }
+        return params.value;
+      },
+    },
+    {
+      field: "votingPrecinctId",
+      headerName: "Precinct ID",
+      width: 150,
+      filterable: true,
+      sortable: true,
+    },
+  ];
+
   const handleRowClick: GridEventListener<"rowDoubleClick"> = useCallback(
     (params) => {
       dispatch(actions.setSelectedProfile(params.row._id));
@@ -296,9 +347,11 @@ export const useProfiles = () => {
 
   return {
     profiles,
+    profiles288,
     columns,
     brgyColumns,
     openEdit,
+    brgy288Columns,
     handleRowClick,
     onCloseModal,
     loadingProfileTable,
